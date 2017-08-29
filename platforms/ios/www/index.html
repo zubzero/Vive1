@@ -12,14 +12,12 @@
     <script src="./js/angular.js"></script>
     <script type="text/javascript" src="./lib/onsenold/jquery.js"></script>
     <script src="./lib/onsenold/onsenui.min.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDD1qiX0PwGVaEtyGCvi3kpT21tyc0feWk&libraries=geometry"></script>
-    <script type="text/javascript" src="js/index.js"></script>
-    <script src="js/greatcircle.js"></script>
-    <script src="js/factory_restaurants.js"></script>
+    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAc1FqV8MG7kCvvP0LNi38zcRAfclDK7n0&libraries=geometry"></script> -->
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3exp&libraries=geometry"></script> -->
+    
         <script>
-        // alert(getDistanceFromLatLonInKm(20.6976563,-103.2756544,20.707225,-103.309024).toFixed(1));
         function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
-          var R = 6371; // Radius of the earth in km
+          var R = 6878; // Radius of the earth in km
           var dLat = deg2rad(lat2-lat1);  // deg2rad below
           var dLon = deg2rad(lon2-lon1); 
           var a = 
@@ -30,12 +28,11 @@
           var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
           var d = R * c; // Distance in km
           return d;
-        }
+        };
         function deg2rad(deg) {
           return deg * (Math.PI/180)
         };
-    var app = angular.module('my-app', ['onsen','wmapp.factory_restaurants','greatCircles']).run(function($rootScope) {
-      // $rootScope.test = getDistanceFromLatLonInKm(mysrclat,mysrclong,20.707225,-103.309024).toFixed(1);
+    var app = angular.module('my-app', ['onsen']).run(function($rootScope) {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(success, error, options);
         var options = {
@@ -58,26 +55,7 @@
               } else {
                 alert('No podemos acceder a tu GPS, revisa que este activado.');
               };
-            });
-    // RESTAURANTLIST CONTROLLER
-    app.controller('restaurantlistController', function ($scope, $rootScope, restaurantsFactory,position,GreatCircle) {
-        "use strict";
-      $scope.restaurantList = restaurantsFactory.getRestaurants(); //call to restaurantfactory
-      $scope.position = position;
-      
-      $scope.distanceTo = function(restaurant) {
-      var distance = GreatCircle.distance( restaurant.long,restaurant.lat, position.longitude, position.latitude)
-      restaurant.distance = distance;
-      distance = distance.toFixed(1);
-      return distance;
-    };
-        $scope.totalDisplayed = 5; // implementing a load more capability
-    $scope.loadMore = function () {
-      $scope.totalDisplayed += 20;  
-    };
-    })
-
-
+            })
     .factory('position', function( $rootScope ){
       
         console.log('building position')
@@ -94,7 +72,8 @@
               
               position.latitude = position2.coords.latitude;
               position.longitude = position2.coords.longitude;
-              
+              var mysrclatlocals = localStorage.getItem(position.latitude);
+              var mysrclatlocals = localStorage.getItem(position.longitude);
               $rootScope.$digest()
           };
 
@@ -108,13 +87,6 @@
       return position;
       
     });
-    app.service('Category',function($http){
-      this.getAll = function(success, failure){
-        $http.get('https://viveenunclick.com/api.php/clientes_categorias').success(function (data){
-        }).error(function(data){
-        });
-      }
-    });
             app.controller("CategoriaCtl", function($scope, $http) {
               var url = 'https://viveenunclick.com/api.php/clientes_categorias';
               $http.get(url).success(function(response) {
@@ -122,13 +94,6 @@
                 console.log($scope.clientes_categorias);
               });
             });
-          app.controller("CatCtl", function($scope, $http) {
-          var url = 'https://viveenunclick.com/api.php/clientes_categorias';
-          $http.get(url).success(function(response) {
-            $scope.categorias = php_crud_api_transform(response);
-            console.log(response);
-          });
-        });
         app.controller("PostsCtrl", function($scope, $http) {
           $http.get('https://viveenunclick.com/api.php/clientes_categorias').success(function (data, status, headers, config) {
             $scope.posts = php_crud_api_transform(data);
@@ -140,23 +105,23 @@
             idnew = elemento;
           };
         });
-        app.controller("PorCategoriaCtl", function($scope, $rootScope, position, $http, Category) {
-          $http.get('https://viveenunclick.com/api.php/clientes?filter[]=id_categoria,eq,'+idnew).success(function(data, status, headers, config) {
-            $scope.sucursalinfo = php_crud_api_transform(data);   //Trae toda la información de los clientes
-            $scope.distancia = getDistanceFromLatLonInKm(position.latitude,position.longitude,$scope.sucursalinfo.Latitud,$scope.sucursalinfo.Longitud).toFixed(1);
-          }).error(function(data, status, headers, config) { }); //Sacar la imagen de la categoria
-          $http.get('https://viveenunclick.com/api.php/clientes_categorias/'+idnew).success(function(data, status, headers, config) {
-            $scope.imagencategorias = data;
-          }).error(function(data, status, headers, config) { });
-
-           $scope.getOrig = function() {
-              return $rootScope.test;
-          };
-
-          $scope.tomarelemento = function (elemento) {
-            idnew = elemento;
-          };
-        });
+    app.controller("PorCategoriaCtl", function($scope, $rootScope, position, $http, $rootScope) {
+      $http.get('https://viveenunclick.com/api.php/clientes?filter[]=id_categoria,eq,'+idnew+'&transform=1').success(function(data, status, headers, config) {
+        $scope.sucursalinfo = data.clientes;   //Trae toda la información de los clientes
+        $scope.clienten = JSON.parse(data);
+        $rootScope.latitude1c = $scope.clienten.Latitud;
+        $rootScope.longitud1c = $scope.clienten.Longitud;
+        console.log($scope.clienten);
+        console.log($rootScope.longitud1c);
+        $rootScope.distancia1 = getDistanceFromLatLonInKm(position.latitude,position.longitude,$rootScope.latitude1c,$rootScope.longitud1c).toFixed(1);
+      }).error(function(data, status, headers, config) { }); //Sacar la imagen de la categoria
+      $http.get('https://viveenunclick.com/api.php/clientes_categorias/'+idnew).success(function(data, status, headers, config) {
+        $scope.imagencategorias = data;
+      }).error(function(data, status, headers, config) { });
+      $scope.tomarelemento = function (elemento) {
+        idnew = elemento;
+      };
+    });
     app.controller("DetalleCtl", function($scope, position, $http, $rootScope) {
       $http.get('https://viveenunclick.com/api.php/clientes/'+idnew).
       success(function(data, status, headers, config) {
@@ -171,6 +136,19 @@
       console.log(comentario_sucursal);
       }
     });
+    app.controller("PorlogoCtl", function($scope, $http, position) {
+      $http.get('https://viveenunclick.com/api.php/clientes?transform=1').
+      success(function(data, status, headers, config) {
+        $scope.query = {};
+        $scope.queryBy = '$';
+        $scope.orderProp="nombre";
+        $scope.porlogo = data;
+      }).
+      error(function(data, status, headers, config) {});
+      $scope.tomarelemento = function (elemento) {
+        idnew = elemento;
+      };
+    });
     function exitFromApp(){
             if (navigator.app) {
                 navigator.app.exitApp();
@@ -181,19 +159,29 @@
             }
         };
 
-        app.controller("ListaCtl", function($scope, $timeout, position) {
-            $(function() {
-             var people = [];
-             $.getJSON('https://viveenunclick.com/api.php/clientes?transform=1', function(data) {
-                 $.each(data.clientes, function(i, f) {
-                    var distancia = getDistanceFromLatLonInKm(position.latitude,position.longitude,f.Latitud,f.Longitud).toFixed(1);
-                    var tblRow = "<tr>" + "<td>" + f.nombre + "</td>" +
-                     "<td>" + f.Latitud + "</td>" + "<td>" + f.Longitud + "</td>" + "<td>" + distancia + "Km</td>" + "</tr>"
-                     $(tblRow).appendTo("#userdata tbody");
-               });
-             });
+    app.controller("ListaCtl", function($scope, $timeout, position) {
+      $(function() {
+          $.getJSON("https://viveenunclick.com/api.php/clientes?transform=1", function (data) {
+              $("#cercademi").append(
+                  $.map(data.clientes, function(f) {
+                      f.distance = getDistanceFromLatLonInKm(position.latitude,
+                                      position.longitude,f.Latitud,f.Longitud).toFixed(1);
+                      return f;
+                  }).sort(function(f1, f2) {
+                      return f1.distance - f2.distance;
+                  }).map(function (f) {
+                    if (f.estado = 1 && f.id_categoria) {
+                      return "<li class='timeline-li' style='background:url(https://viveenunclick.com/assets/images/imgclientes/" + f.img_panoramica + ");'><a onclick='idnew="+f.id+"; menu.setMainPage(\"detalle.html\")'>" + "<div ng-if='" + f.img_logo + "'><img src='https://viveenunclick.com/assets/images/imgclientes/"+f.img_logo+"' class='timeline-image'></div><div class='timeline-date distancia'>" + f.distance + " Km</div>" + 
+                                          "<div class='timeline-from'><span class='timeline-name'>" + f.nombre + "</span></div></a></li>";                
+                    };
+                  })
+              );
           });
-        });
+      });
+      $scope.tomarelemento = function (elemento) {
+        idnew = elemento;
+      };
+    });
         </script>
     </head>
   <body>
@@ -210,52 +198,22 @@
             <div class="center logo"><img ng-src="img/logo1.png"></div>
             <div class="homeUno">
               <div class="flecha"></div>
-              <h4 class="center">Busca tu negocio</h4>
+              <h4 class="center">BUSCA TU NEGOCIO</h4>
               <div class="botonesHome">
               <ons-button modifier="outline" onclick="menu.setMainPage('categorias.html', {closeMenu: true})"><ons-icon icon="fa-sitemap"></ons-icon><br /><span class="letraHome">POR CATEGORIA</span></ons-button>
               <ons-button modifier="outline" onclick="menu.setMainPage('lista.html', {closeMenu: true})"><ons-icon icon="fa-street-view"></ons-icon><br /><span class="letraHome">CERCA DE MÍ</span></ons-button>
-              <ons-button modifier="outline"><ons-icon icon="fa-diamond"></ons-icon><br /><span class="letraHome">POR LOGO</span></ons-button>
-              <ons-button modifier="outline"><ons-icon icon="fa-tags"></ons-icon><br /><span class="letraHome">POR NOMBRE</span></ons-button>
+              <ons-button modifier="outline" onclick="menu.setMainPage('por_logo.html', {closeMenu: true})"><ons-icon icon="fa-diamond"></ons-icon><br /><span class="letraHome">POR LOGO</span></ons-button>
+              <ons-button modifier="outline" onclick="menu.setMainPage('por_nombre.html', {closeMenu: true})"><ons-icon icon="fa-tags"></ons-icon><br /><span class="letraHome">POR NOMBRE</span></ons-button>
                 </div>
             </div>
           <div class="imagenHome"></div><div class="mapaHome"></div>
-          <!--<div data-ng-controller="restaurantlistController" >
-        <div  ng-repeat="restaurant in restaurantList | orderBy: 'distance' | limitTo:totalDisplayed" href="#">
-        <article class="item_frame">
-          <div class="marker_left_container">
-              <span class="venu_type_text">{{restaurant.venueType}}</span>
-              <span class="distance_from_user_rest"> distance: {{distanceTo(restaurant)}}Km</span>
-              <span class="distance_from_user_rest2">from current location</span>
-            </div>
-            <div class="restaurant_details_container">
-              <h1 class="restaurant_name_inlist">{{restaurant.Name}}</h1>
-              <span class="restaurant_detail_inlist2">{{restaurant.subCuisine}}  <br />
-
-   {{restaurant.subsubCuisine}}</span>
-              <span class="restaurant_address">{{restaurant.address}}, <br />
-              </span>
-              <span class="restaurant_address">{{restaurant.cp}}, {{restaurant.city}}  <br />
-              
-              </span>
-              <span class="restaurant_others">{{restaurant.phoneNumber}} <br />
-              </span>
-              <span class="restaurant_others">{{restaurant.website}}  <br />
-              </span>
-              <span></span>
-            </div>
-            
-          </article>
-            
-          </div>
-          <button class="button button-outline button-stable custom_button_lau" ng-click="loadMore()">Load more</button>
-        </div>-->
           <div class="footer">
             <div class="botones">
-              <ons-button onclick="menu.setMainPage('categorias.html', {closeMenu: true})"><i class="fa fa-book" aria-hidden="true"></i><br> Instructivo</ons-button>
-              <ons-button><i class="fa fa-user" aria-hidden="true"></i><br> Contacto</ons-button>
-              <ons-button onclick="exitFromApp();"><i class="fa fa-power-off" aria-hidden="true"></i><br> Salir</ons-button>
+              <ons-button onclick="menu.setMainPage('instrucciones.html', {closeMenu: true})"><i class="fa fa-book" aria-hidden="true"></i><br> INSTRUCTIVO</ons-button>
+              <ons-button><i class="fa fa-user" aria-hidden="true"></i><br> CONTACTO</ons-button>
+              <ons-button onclick="exitFromApp();"><i class="fa fa-power-off" aria-hidden="true"></i><br> SALIR</ons-button>
             </div>
-            <div class="copy"><p>Vive en un Click &copy; 2017 | Versión: 0.56</p></div>
+            <div class="copy"><p>Vive en un Click &copy; 2017 | Versión: 0.58</p></div>
           </div>
           </ons-page>
         </ons-template>
@@ -267,14 +225,14 @@
                         <ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em;"></ons-icon>
                     </ons-toolbar-button>
                     </div>
-                    <div class="center">Categorías</div>
+                    <div class="center">CATEGORÍAS</div>
                     <div class="right">
                         <img class="logo_head" onclick="menu.setMainPage('page1.html', {closeMenu: true})" ng-src="img/logo_chico.png">
                     </div>
                 </ons-toolbar>
                 <ons-tabbar position="top">
                     <ons-tab ng-click="menu.setMainPage('page1.html', {closeMenu: true}, {animation:'slide'})" label="Inicio" icon="fa-home"></ons-tab>
-                    <ons-tab ng-click="menu.setMainPage('buscar.html', {closeMenu: true}, {animation:'lift'})" label="Buscar" icon="fa-search"></ons-tab>
+                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="Por nombre" icon="fa-search"></ons-tab>
                     <ons-tab ng-click="menu.setMainPage('por_logo.html', {closeMenu: true}, {animation:'slide'})" label="Por Logo" icon="fa-star"></ons-tab>
                 </ons-tabbar>
                 <p>&nbsp;</p>
@@ -291,30 +249,81 @@
                         <ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em;"></ons-icon>
                     </ons-toolbar-button>
                     </div>
-                    <div class="center">Lista mapa</div>
+                    <div class="center">CERCA DE MÍ</div>
                     <div class="right">
                         <img class="logo_head" onclick="menu.setMainPage('page1.html', {closeMenu: true})" ng-src="img/logo_chico.png">
                     </div>
                 </ons-toolbar>
                 <ons-tabbar position="top">
                     <ons-tab ng-click="menu.setMainPage('page1.html', {closeMenu: true}, {animation:'slide'})" label="Inicio" icon="fa-home"></ons-tab>
-                    <ons-tab ng-click="menu.setMainPage('buscar.html', {closeMenu: true}, {animation:'lift'})" label="Buscar" icon="fa-search"></ons-tab>
+                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="por_nombre" icon="fa-search"></ons-tab>
                     <ons-tab ng-click="menu.setMainPage('por_logo.html', {closeMenu: true}, {animation:'slide'})" label="Por Logo" icon="fa-star"></ons-tab>
                 </ons-tabbar>
                 <p>&nbsp;</p>
-                <div class="profile">
-                   <table id= "userdata" border="2">
-                  <thead>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email Address</th>
-                            <th>City</th>
-                        </thead>
-                      <tbody>
-
-                       </tbody>
-                   </table>
-
+                <ul id="cercademi">
+                  </ul>
+            </ons-page>
+        </ons-template>
+        <ons-template id="por_logo.html">
+            <ons-page ng-controller="PorlogoCtl" class="por_logo">
+                <ons-toolbar>
+                    <div class="left">
+                        <ons-toolbar-button onclick="menu.setMainPage('page1.html', {closeMenu: true})">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    </ons-toolbar-button>
+                    </div>
+                    <div class="center">POR LOGO</div>
+                    <div class="right">
+                        <img class="logo_head" onclick="menu.setMainPage('page1.html', {closeMenu: true})" ng-src="img/logo_chico.png">
+                    </div>
+                </ons-toolbar>
+                <div class="content-2">
+                  <div class="cliente" ng-repeat="cliente in porlogo.clientes" ng-click="tomarelemento(cliente.id); menu.setMainPage('detalle.html', {closeMenu: true})" ng-if="cliente.estado == '1' && cliente.id_categoria && cliente.img_logo">
+                    <img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{cliente.img_logo}}">
+                  </div>
+                </div>
+            </ons-page>
+        </ons-template>
+        <ons-template id="por_nombre.html">
+            <ons-page ng-controller="PorlogoCtl" class="por_logo">
+                <ons-toolbar>
+                    <div class="left">
+                        <ons-toolbar-button onclick="menu.setMainPage('page1.html', {closeMenu: true})">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    </ons-toolbar-button>
+                    </div>
+                    <div class="center">POR NOMBRE</div>
+                    <div class="right">
+                        <img class="logo_head" onclick="menu.setMainPage('page1.html', {closeMenu: true})" ng-src="img/logo_chico.png">
+                    </div>
+                </ons-toolbar>
+                <div class="content-2">
+                <table style="position: relative;margin: 0 auto;">
+                    <tr>
+                        <td><input class="enjoy-css" placeholder="Buscar por nombre" ng-model="query[queryBy]" /></td>
+                    </tr>
+                </table>
+                <ons-list>
+                  <ons-list-item modifier="chevron" class="list-item-container" ng-repeat="cliente in porlogo.clientes | filter:query" ng-click="tomarelemento(cliente.id); menu.setMainPage('detalle.html', {closeMenu: true})" ng-if="cliente.estado == '1' && cliente.id_categoria && cliente.img_logo">
+                    <ons-row>
+                      <ons-col width="95px">
+                        <img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{cliente.img_logo}}" class="thumbnail">
+                      </ons-col>
+                      <ons-col>
+                        <div class="name">
+                          {{cliente.nombre}}
+                        </div>
+                        <div class="location" ng-if="cliente.telefono">
+                          <i class="fa fa-phone" aria-hidden="true"></i> {{cliente.telefono}}
+                        </div><!-- 
+                        <div class="desc" ng-if="cliente.direccion">
+                          {{cliente.direccion}}
+                        </div> -->
+                      </ons-col>
+                      <ons-col width="40px"></ons-col>
+                    </ons-row>
+                  </ons-list-item>
+                </ons-list>
                 </div>
             </ons-page>
         </ons-template>
@@ -332,7 +341,7 @@
                 </ons-toolbar>
                 <ons-tabbar position="top" >
                     <ons-tab ng-click="menu.setMainPage('page1.html', {closeMenu: true}, {animation:'slide'})" label="Inicio" icon="fa-home"></ons-tab>
-                    <ons-tab ng-click="menu.setMainPage('buscar.html', {closeMenu: true}, {animation:'lift'})" label="Buscar" icon="fa-search"></ons-tab>
+                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="por_nombre" icon="fa-search"></ons-tab>
                     <ons-tab ng-click="menu.setMainPage('por_logo.html', {closeMenu: true}, {animation:'slide'})" label="Por Logo" icon="fa-star"></ons-tab>
                 </ons-tabbar>
                 <p>&nbsp;</p>
@@ -341,14 +350,16 @@
                     <div class="nombre_categoria timeline-name">{{imagencategorias.nombre}}</div>
                 </div>
                 <ons-list class="timeline" modifier="inset">
-                  <ons-list-item ng-click="tomarelemento(post.id); menu.setMainPage('detalle.html', {closeMenu: true})" class="timeline-li" modifier="tappable" ng-repeat="post in sucursalinfo.clientes" ng-if="post.estado == '1'" style="background: url(https://viveenunclick.com/assets/images/imgclientes/{{post.img_panoramica}});">
+                  <ons-list-item ng-click="tomarelemento(post.id); menu.setMainPage('detalle.html', {closeMenu: true})" class="timeline-li" modifier="tappable" ng-repeat="post in sucursalinfo" ng-if="post.estado == '1'" style="background: url(https://viveenunclick.com/assets/images/imgclientes/{{post.img_panoramica}});">
                     <ons-row>
                       <ons-col>
+                      <div ng-if="post.img_logo">
                         <img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{post.img_logo}}" class="timeline-image">
-                        <div class="timeline-date">{{post.distancia}} Km</div>
+                      </div>
+                        <!-- <div class="timeline-date">{{distancia1}} Km</div> -->
                         <div class="timeline-from">
                           <span class="timeline-name">{{post.nombre}}</span>
-                          <span class="timeline-id">{{getDistanceFromLatLonInKm(20.697710999999998,-103.275734,post.Latitud,post.Longitud)}}</span>
+                          <span class="timeline-id"></span>
                         </div>
                         <div class="timeline-message"></div>
                       </ons-col>
@@ -378,7 +389,7 @@
                     <div class="tipo_comida">{{distancia}} Km</div>
                     <!-- <div class="card-desc">{{sucursalinfo.twitter}}</div> -->
                 </div>
-                <ons-list style="border-top: none"><ons-list-item style="line-height: 1; padding: 0;">
+                <ons-list class="lista_detalle"><ons-list-item>
                 <ons-row class="action">
 
                  <!--  <ons-col class="action-col">
@@ -387,6 +398,7 @@
                   </ons-col>
 
                   <ons-col class="action-col">
+                  <i class="fa fa-paper-plane" aria-hidden="true"></i>
                     <div class="action-icon"><ons-icon icon="ion-bookmark"></ons-icon></div>
                     <div class="action-label">Favorite</div>
                   </ons-col> -->
@@ -396,15 +408,17 @@
                     <div class="action-label">Compartir</div>
                   </ons-col>
 
-                  <ons-col class="action-col">
-                    <div class="action-icon"><ons-icon icon="ion-compose"></ons-icon></div>
-                    <div class="action-label">Web</div>
-                  </ons-col>
+                  <!-- <ons-col class="action-col" ng-if="!sucursalinfo.sitio_web">
+                   <a href="{{sucursalinfo.sitio_web}}" onclick="{{sucursalinfo.sitio_web}}" target="_black">
+                     <div class="action-icon"><ons-icon icon="ion-compose"></ons-icon></div>
+                    <div class="action-label">Sitio Web</div>
+                   </a>
+                  </ons-col> -->
 
                 </ons-row>
               </ons-list-item></ons-list>
-              <div class="boton_menu">
-                  <ons-button modifier="large--cta boton-detalle" ng-click="tel:{{sucursalinfo.telefono}}">LLAMAR
+              <div class="boton_menu" ng-if="sucursalinfo.telefono">
+                  <ons-button  modifier="large--cta boton-detalle" onclick="tel:{{sucursalinfo.telefono}}">LLAMAR
                   </ons-button>
               </div>
                 <ul class="list detalle">
@@ -416,16 +430,21 @@
                     </div>
                     <li class="list__item">
                         <ons-icon icon="ion-location"></ons-icon>
-                        <b>Sitio web:</b> {{sucursalinfo.sitio_web}}
+                        <b>Sitio web:</b> 
                     </li>
                     <li class="list__header">
-                        <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                        Distancia: Km.
+                        
+                        Redes sociales:
                     </li>
                 </ul>
                 <div class="redes">
-                  <a target="_blank" href="{{sucursalinfo.facebook}}"><i class="fa fa-facebook-square" aria-hidden="true"></i> </a>
-                  <a target="_blank" href="{{sucursalinfo.twitter}}"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+                  <a ng-if="sucursalinfo.facebook" target="_blank" href="{{sucursalinfo.facebook}}"><i class="fa fa-facebook-square" aria-hidden="true"></i> </a>
+                  <a ng-if="sucursalinfo.twitter" target="_blank" href="{{sucursalinfo.twitter}}"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+                  <a ng-if="sucursalinfo.instagram" target="_blank" href="{{sucursalinfo.instagram}}"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+                  <a ng-if="sucursalinfo.youtube" target="_blank" href="{{sucursalinfo.youtube}}"><i class="fa fa-youtube-square" aria-hidden="true"></i></a>
+                  <a ng-if="sucursalinfo.pinterest" target="_blank" href="{{sucursalinfo.pinterest}}"><i class="fa fa-pinterest-square" aria-hidden="true"></i></a>
+                  <a ng-if="sucursalinfo.linkedin" target="_blank" href="{{sucursalinfo.linkedin}}"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
+                  <a ng-if="sucursalinfo.googleplus" target="_blank" href="{{sucursalinfo.googleplus}}"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a>
                 </div>
             </ons-page>
         </ons-template>
@@ -445,32 +464,90 @@
           <div class="imagenHome"></div>
           </ons-page>
         </ons-template>
-        <ons-template id="por_logo.html">
+        <ons-template id="aviso.html">
           <ons-page>
-          <div class="center logo"><img ng-src="img/logo1.png"></div>
-          <div class="homeUno">
-              <h4 class="center">Busca tu negocio</h4>
-              <div class="flecha"></div>
-              <div class="botonesHome">
-              <ons-button modifier="outline" onclick="menu.setMainPage('categorias.html', {closeMenu: true})"><ons-icon icon="fa-sitemap"></ons-icon><br /><span class="letraHome">POR CATEGORIA</span></ons-button>
-              <ons-button modifier="outline"><ons-icon icon="fa-street-view"></ons-icon><br /><span class="letraHome">CERCA DE MÍ</span></ons-button>
-              <ons-button modifier="outline"><ons-icon icon="fa-diamond"></ons-icon><br /><span class="letraHome">POR LOGO</span></ons-button>
-              <ons-button modifier="outline"><ons-icon icon="fa-tags"></ons-icon><br /><span class="letraHome">POR NOMBRE</span></ons-button>
+          <ons-toolbar>
+              <div class="left">
+                <ons-toolbar-button onclick="menu.toggleMenu()">
+                  <ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em;"></ons-icon>
               </div>
+              <div class="center">Aviso de privacidad</div>
+              <div class="right">
+                  <img class="logo_head" onclick="menu.setMainPage('page1.html', {closeMenu: true})" ng-src="img/logo_chico.png">
+              </div>
+          </ons-toolbar>
+          <div class="content">
+            <p>Pendiente</p>
           </div>
-          <div class="imagenHome"></div>
           </ons-page>
         </ons-template>
-        <ons-template id="menu.html">
-            <ons-list>
+        <ons-template id="instrucciones.html">
+          <ons-page>
+          <ons-toolbar>
+              <div class="left">
+                <ons-toolbar-button onclick="menu.toggleMenu()">
+                  <ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em;"></ons-icon>
+              </div>
+              <div class="center">INSTRUCTIVO</div>
+              <div class="right">
+                  <img class="logo_head" onclick="menu.setMainPage('page1.html', {closeMenu: true})" ng-src="img/logo_chico.png">
+              </div>
+          </ons-toolbar>
+          <div class="content">
+            <h5>¿QUE ENCONTRARAS?</h5>
+            <p>Directorio móvil donde encuentras cualquier negocio o servicio... sencilla plataforma para buscar en mas de 5 maneras...VIVE ...CLICKEA ...ENCUENTRA</p>
+            <p>En nuestra plataforma cada empresa tiene un espacio virtual interactivo desde el que ofrece información única y completa, aquí encontraras informacion, promociones videos, domicilio, telefono y links hacia toda la información general de cada empresa para que selecciones la mejor compra y la mas cerca de ti.</p>
+            <p>Cada negocio tiene geolocalizacion, horarios, fotos del establecimiento o promociones, y mas de 20 herramientas de cada uno...VIVE...CLICKEA ...ENCUENTRA.</p>
+            <h5><ons-icon icon="fa-street-view"></ons-icon> BUSQUEDA POR CERCANIA</h5>
+            <p>Cada negocio lo puedes localizar por cercania hacia ti...por medio de google maps encuentra facilmente a traves de un sencillo motor de busqueda en mas de 3 km alrededro de ti..VIVE..CLICKEA ...ENCUENTRA</p>
+            <h5><i class="fa fa-sitemap" aria-hidden="true"></i> BUSQUEDA POR CATEGORIAS</h5>
+            <p>Tenemos para ti mas de 50 categorías en la cual todos los establecimientos están divididos y sera mas fácil encontrar lo que buscas, todo lo mas cercano a ti..VIVE..CLICKEA ...ENCUENTRA</p>
+            <h5><i class="fa fa-diamond" aria-hidden="true"></i> BUSQUEDA POR LOGOS</h5>
+            <p>Aquí encontraras a todas las empresas por medio de cada logo, darás un click y te llevara a cadanegocio donde podrás ver a detalle toda su información. tenemos videos explicativos y botones para que puedas navegar en ella Lo siguiente facilitara tu acceso a cada stand y disfrutaras más tu estancia. VIVE..CLICKEA ...ENCUENTRA</p>
+            <h4><i class="fa fa-building" aria-hidden="true"></i> EMPRESA</h4>
+            <p>Toda la información general de cada empresa, la podrás ver en estos botones, empresa, domicilio sucursales teléfonos, productos y servicios.</p>
+            <h4><i class="fa fa-users" aria-hidden="true"></i> REDES SOCIALES</h4>
+            <p>En la actualidad existimos más de 50 millones de cibernautas y tener toda la información a la mano de sus redes es fundamental, hazte fan y sigue a estas empresas día con día.</p>
+            <h4><i class="fa fa-envelope" aria-hidden="true"></i> MAIL</h4>
+            Si tu tiempo es limitado consúltanos directamente cualquier duda o comentario a los correos directos de cada empresa, cotizaciones, envíos, comentarios, citas etc. 
+            <h4><i class="fa fa-paper-plane-o" aria-hidden="true"></i> UBICACION</h4> 
+            <p>La manera mas facil de encontrar cualquier negocio cerca de ti..</p>
+            <h4><i class="fa fa-tags" aria-hidden="true"></i> PROMOCIONES</h4>
+            <p>Tendrás accesos a todas las promociones, descuentos y podrás comprar en línea durante toda la año.</p>
+          </div>
+          </ons-page>
+        </ons-template>
+        <ons-template id="menu.html" class="menu-pagina">
+            <ons-list class="lista-menu">
                 <ons-list-item modifier="chevron" onclick="menu.setMainPage('page1.html', {closeMenu: true})">
-                    <ons-icon icon="fa fa-home" size="22px"></ons-icon>
-                    Portada
+                  <i class="fa fa-home" aria-hidden="true"></i> Inicio
                 </ons-list-item>
-                <ons-list-item modifier="chevron" onclick="exitFromApp();">SALIR</ons-list-item>
+                <ons-list-item modifier="chevron" onclick="menu.setMainPage('instrucciones.html', {closeMenu: true})">
+                  <i class="fa fa-book" aria-hidden="true"></i> Instructivo
+                </ons-list-item>
+                <ons-list-item modifier="chevron" onclick="menu.setMainPage('categorias.html', {closeMenu: true})">
+                  <ons-icon icon="fa-sitemap"></ons-icon> Por categoria
+                </ons-list-item>
+                <ons-list-item modifier="chevron" onclick="menu.setMainPage('lista.html', {closeMenu: true})">
+                  <ons-icon icon="fa-street-view"></ons-icon> Cerca de mí
+                </ons-list-item>
+                <ons-list-item modifier="chevron" onclick="menu.setMainPage('por_logo.html', {closeMenu: true})">
+                <i class="fa fa-diamond" aria-hidden="true"></i> Por Logo
+                </ons-list-item>
+                <ons-list-item modifier="chevron" onclick="menu.setMainPage('por_nombre.html', {closeMenu: true})">
+                <ons-icon icon="fa-street-view"></ons-icon> Por nombre
+                </ons-list-item>
+                <ons-list-item modifier="chevron" onclick="menu.setMainPage('aviso.html', {closeMenu: true})">
+                <ons-icon icon="fa-street-view"></ons-icon> Aviso de privacidad
+                </ons-list-item>
+                <ons-list-item modifier="chevron" onclick="menu.setMainPage('contacto.html', {closeMenu: true})">
+                <i class="fa fa-user" aria-hidden="true"></i> Contacto
+                </ons-list-item> 
+                <ons-list-item modifier="chevron" onclick="exitFromApp();"><i class="fa fa-share" aria-hidden="true"></i> Salir</ons-list-item>
             </ons-list>
         </ons-template>
         <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
         <script src="./js/php_crud_api_transform.js"></script>
     </body>
 </html>

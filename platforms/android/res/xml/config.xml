@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.viveenunclick.mx" version="0.36" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.viveenunclick.mx" version="0.38" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <feature name="Whitelist">
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
@@ -14,6 +14,17 @@
     <feature name="Geolocation">
         <param name="android-package" value="org.apache.cordova.geolocation.Geolocation" />
     </feature>
+    <feature name="GoogleMaps">
+        <param name="android-package" value="plugin.google.maps.GoogleMaps" />
+        <param name="onload" value="true" />
+        <param name="onreset" value="true" />
+    </feature>
+    <feature name="External">
+        <param name="android-package" value="plugin.google.maps.External" />
+    </feature>
+    <feature name="Geocoder">
+        <param name="android-package" value="plugin.google.maps.MyGeocoder" />
+    </feature>
     <name>Vive En Un Click</name>
     <description>
         Red de negocios
@@ -23,9 +34,16 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
+    <access origin="*://*.googleapis.com/*" subdomains="true" />
+    <access origin="*://*.google.com/*" subdomains="true" />
+    <access origin="*://*.googleusercontent.com/*" subdomains="true" />
+    <access origin="*://*.gstatic.com/*" subdomains="true" />
+    <access origin="http://google.com" />
+    <access origin="https://google.com" />
+    <access origin="https://*.google.com" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
-    <allow-intent href="tel:*" />
+    <allow-intent href="tel:*" launch-external="yes" />
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
@@ -44,15 +62,4 @@
     <preference name="SplashScreenWidth" value="258" />
     <preference name="SplashScreenHeight" value="378" />
     <preference name="SplashScreenBackgroundColor" value="#ffffff" />
-    <feature name="GoogleMaps">
-        <param name="android-package" value="plugin.google.maps.GoogleMaps" />
-        <param name="onload" value="true" />
-        <param name="onreset" value="true" />
-    </feature>
-    <feature name="External">
-        <param name="android-package" value="plugin.google.maps.External" />
-    </feature>
-    <feature name="Geocoder">
-        <param name="android-package" value="plugin.google.maps.MyGeocoder" />
-    </feature>
 </widget>

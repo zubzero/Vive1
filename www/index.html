@@ -12,8 +12,9 @@
     <script src="./js/angular.js"></script>
     <script type="text/javascript" src="./lib/onsenold/jquery.js"></script>
     <script src="./lib/onsenold/onsenui.min.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDD1qiX0PwGVaEtyGCvi3kpT21tyc0feWk&libraries=geometry"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAc1FqV8MG7kCvvP0LNi38zcRAfclDK7n0&libraries=geometry"></script> -->
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3exp&libraries=geometry"></script> -->
+    
         <script>
         function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
           var R = 6878; // Radius of the earth in km
@@ -71,7 +72,8 @@
               
               position.latitude = position2.coords.latitude;
               position.longitude = position2.coords.longitude;
-              
+              var mysrclatlocals = localStorage.getItem(position.latitude);
+              var mysrclatlocals = localStorage.getItem(position.longitude);
               $rootScope.$digest()
           };
 
@@ -211,7 +213,7 @@
               <ons-button><i class="fa fa-user" aria-hidden="true"></i><br> CONTACTO</ons-button>
               <ons-button onclick="exitFromApp();"><i class="fa fa-power-off" aria-hidden="true"></i><br> SALIR</ons-button>
             </div>
-            <div class="copy"><p>Vive en un Click &copy; 2017 | Versión: 0.56</p></div>
+            <div class="copy"><p>Vive en un Click &copy; 2017 | Versión: 0.58</p></div>
           </div>
           </ons-page>
         </ons-template>
@@ -230,7 +232,7 @@
                 </ons-toolbar>
                 <ons-tabbar position="top">
                     <ons-tab ng-click="menu.setMainPage('page1.html', {closeMenu: true}, {animation:'slide'})" label="Inicio" icon="fa-home"></ons-tab>
-                    <ons-tab ng-click="menu.setMainPage('buscar.html', {closeMenu: true}, {animation:'lift'})" label="Buscar" icon="fa-search"></ons-tab>
+                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="Por nombre" icon="fa-search"></ons-tab>
                     <ons-tab ng-click="menu.setMainPage('por_logo.html', {closeMenu: true}, {animation:'slide'})" label="Por Logo" icon="fa-star"></ons-tab>
                 </ons-tabbar>
                 <p>&nbsp;</p>
@@ -254,7 +256,7 @@
                 </ons-toolbar>
                 <ons-tabbar position="top">
                     <ons-tab ng-click="menu.setMainPage('page1.html', {closeMenu: true}, {animation:'slide'})" label="Inicio" icon="fa-home"></ons-tab>
-                    <ons-tab ng-click="menu.setMainPage('buscar.html', {closeMenu: true}, {animation:'lift'})" label="Buscar" icon="fa-search"></ons-tab>
+                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="por_nombre" icon="fa-search"></ons-tab>
                     <ons-tab ng-click="menu.setMainPage('por_logo.html', {closeMenu: true}, {animation:'slide'})" label="Por Logo" icon="fa-star"></ons-tab>
                 </ons-tabbar>
                 <p>&nbsp;</p>
@@ -339,7 +341,7 @@
                 </ons-toolbar>
                 <ons-tabbar position="top" >
                     <ons-tab ng-click="menu.setMainPage('page1.html', {closeMenu: true}, {animation:'slide'})" label="Inicio" icon="fa-home"></ons-tab>
-                    <ons-tab ng-click="menu.setMainPage('buscar.html', {closeMenu: true}, {animation:'lift'})" label="Buscar" icon="fa-search"></ons-tab>
+                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="por_nombre" icon="fa-search"></ons-tab>
                     <ons-tab ng-click="menu.setMainPage('por_logo.html', {closeMenu: true}, {animation:'slide'})" label="Por Logo" icon="fa-star"></ons-tab>
                 </ons-tabbar>
                 <p>&nbsp;</p>
@@ -545,6 +547,7 @@
             </ons-list>
         </ons-template>
         <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
         <script src="./js/php_crud_api_transform.js"></script>
     </body>
 </html>
