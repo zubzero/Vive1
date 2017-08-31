@@ -13,8 +13,8 @@
     <script type="text/javascript" src="./lib/onsenold/jquery.js"></script>
     <script src="./lib/onsenold/onsenui.min.js"></script>
     <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAc1FqV8MG7kCvvP0LNi38zcRAfclDK7n0&libraries=geometry"></script> -->
-    <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3exp&libraries=geometry"></script> -->
-    
+    <script src="https://maps.googleapis.com/maps/api/js?v=3exp&libraries=geometry"></script>
+    <script src="./js/ng-map.min.js"></script>
         <script>
         function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
           var R = 6878; // Radius of the earth in km
@@ -32,7 +32,7 @@
         function deg2rad(deg) {
           return deg * (Math.PI/180)
         };
-    var app = angular.module('my-app', ['onsen']).run(function($rootScope) {
+    var app = angular.module('my-app', ['onsen', 'ngMap']).run(function($rootScope) {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(success, error, options);
         var options = {
@@ -58,7 +58,7 @@
             })
     .factory('position', function( $rootScope ){
       
-        console.log('building position')
+        // console.log('building position')
       
         var position = {};
       
@@ -87,14 +87,17 @@
       return position;
       
     });
-            app.controller("CategoriaCtl", function($scope, $http) {
+    app.controller("homeCtl", function($scope, position){
+      $scope.version = 0.59;
+    });
+            app.controller("CategoriaCtl", function($scope, $http, position) {
               var url = 'https://viveenunclick.com/api.php/clientes_categorias';
               $http.get(url).success(function(response) {
                 $scope.clientes_categorias = php_crud_api_transform(response);
                 console.log($scope.clientes_categorias);
               });
             });
-        app.controller("PostsCtrl", function($scope, $http) {
+        app.controller("PostsCtrl", function($scope, $http, position) {
           $http.get('https://viveenunclick.com/api.php/clientes_categorias').success(function (data, status, headers, config) {
             $scope.posts = php_crud_api_transform(data);
             // console.log($scope.posts)
@@ -194,7 +197,7 @@
     </div>
     <ons-sliding-menu main-page="page1.html" menu-page="menu.html" swipeable="true" side="left" max-slide-distance="250px" var="menu"></ons-sliding-menu>
         <ons-template id="page1.html">
-          <ons-page>
+          <ons-page ng-controller="homeCtl">
             <div class="center logo"><img ng-src="img/logo1.png"></div>
             <div class="homeUno">
               <div class="flecha"></div>
@@ -213,7 +216,7 @@
               <ons-button><i class="fa fa-user" aria-hidden="true"></i><br> CONTACTO</ons-button>
               <ons-button onclick="exitFromApp();"><i class="fa fa-power-off" aria-hidden="true"></i><br> SALIR</ons-button>
             </div>
-            <div class="copy"><p>Vive en un Click &copy; 2017 | Versión: 0.58</p></div>
+            <div class="copy"><p>Vive en un Click &copy; 2017 | Versión: {{version}}</p></div>
           </div>
           </ons-page>
         </ons-template>
@@ -232,7 +235,7 @@
                 </ons-toolbar>
                 <ons-tabbar position="top">
                     <ons-tab ng-click="menu.setMainPage('page1.html', {closeMenu: true}, {animation:'slide'})" label="Inicio" icon="fa-home"></ons-tab>
-                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="Por nombre" icon="fa-search"></ons-tab>
+                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="Por nombre" icon="fa-tags"></ons-tab>
                     <ons-tab ng-click="menu.setMainPage('por_logo.html', {closeMenu: true}, {animation:'slide'})" label="Por Logo" icon="fa-star"></ons-tab>
                 </ons-tabbar>
                 <p>&nbsp;</p>
@@ -256,7 +259,7 @@
                 </ons-toolbar>
                 <ons-tabbar position="top">
                     <ons-tab ng-click="menu.setMainPage('page1.html', {closeMenu: true}, {animation:'slide'})" label="Inicio" icon="fa-home"></ons-tab>
-                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="por_nombre" icon="fa-search"></ons-tab>
+                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="Por nombre" icon="fa-tags"></ons-tab>
                     <ons-tab ng-click="menu.setMainPage('por_logo.html', {closeMenu: true}, {animation:'slide'})" label="Por Logo" icon="fa-star"></ons-tab>
                 </ons-tabbar>
                 <p>&nbsp;</p>
@@ -341,7 +344,7 @@
                 </ons-toolbar>
                 <ons-tabbar position="top" >
                     <ons-tab ng-click="menu.setMainPage('page1.html', {closeMenu: true}, {animation:'slide'})" label="Inicio" icon="fa-home"></ons-tab>
-                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="por_nombre" icon="fa-search"></ons-tab>
+                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="Por nombre" icon="fa-tags"></ons-tab>
                     <ons-tab ng-click="menu.setMainPage('por_logo.html', {closeMenu: true}, {animation:'slide'})" label="Por Logo" icon="fa-star"></ons-tab>
                 </ons-tabbar>
                 <p>&nbsp;</p>
@@ -417,23 +420,26 @@
 
                 </ons-row>
               </ons-list-item></ons-list>
-              <div class="boton_menu" ng-if="sucursalinfo.telefono">
-                  <ons-button  modifier="large--cta boton-detalle" onclick="tel:{{sucursalinfo.telefono}}">LLAMAR
-                  </ons-button>
-              </div>
+              <!-- <div class="boton_menu" ng-if="sucursalinfo.telefono">
+                  <a href="#" modifier="large--cta boton-detalle" onclick="tel:'{{sucursalinfo.telefono}}'">LLAMAR
+                  </a>
+              </div> -->
                 <ul class="list detalle">
+                    <li class="list__item">
+                        <ons-icon icon="ion-location"></ons-icon>
+                        <b>{{sucursalinfo.direccion}}</b> 
+                    </li>
                     <div class="a_domicilio">
                         <li class="list__item">
                             <i class="fa fa-envelope" aria-hidden="true"></i>
                             <b>Correo:</b> {{sucursalinfo.correo_contacto}}
                         </li>
                     </div>
-                    <li class="list__item">
-                        <ons-icon icon="ion-location"></ons-icon>
-                        <b>Sitio web:</b> 
+                    <li class="list__item"><ng-map center="{{sucursalinfo.Latitud}},{{sucursalinfo.Longitud}}" zoom="15">
+                      <marker position="{{sucursalinfo.Latitud}},{{sucursalinfo.Longitud}}" title="{{sucursalinfo.nombre}}"></marker>
+                    </ng-map>
                     </li>
                     <li class="list__header">
-                        
                         Redes sociales:
                     </li>
                 </ul>
