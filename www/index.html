@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" ng-app="my-app">
   <head>
+    <meta charset="UTF-8">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
@@ -72,14 +73,13 @@
               
               position.latitude = position2.coords.latitude;
               position.longitude = position2.coords.longitude;
-              var mysrclatlocals = localStorage.getItem(position.latitude);
-              var mysrclatlocals = localStorage.getItem(position.longitude);
               $rootScope.$digest()
           };
 
         function onError(error) { // onError Callback receives a PositionError object
-            alert('code: '    + error.code    + '\n' +
-                  'message: ' + error.message + '\n');
+            // alert('code: '    + error.code    + '\n' +
+                  // 'message: ' + error.message + '\n');
+                  alert('No podemos acceder a su ubicación');
         }
 
         navigator.geolocation.getCurrentPosition(onSuccess, onError);
@@ -88,7 +88,7 @@
       
     });
     app.controller("homeCtl", function($scope, position){
-      $scope.version = 0.59;
+      $scope.version = 1.0;
     });
             app.controller("CategoriaCtl", function($scope, $http, position) {
               var url = 'https://viveenunclick.com/api.php/clientes_categorias';
@@ -98,18 +98,18 @@
               });
             });
         app.controller("PostsCtrl", function($scope, $http, position) {
-          $http.get('https://viveenunclick.com/api.php/clientes_categorias').success(function (data, status, headers, config) {
+          $http.get('https://viveenunclick.com/api.php/clientes_categorias?order=nombre,asc').success(function (data, status, headers, config) {
             $scope.posts = php_crud_api_transform(data);
             // console.log($scope.posts)
           }).error(function (data, status, headers, config) {
-            $scope.posts = "No encontramos resultados";
+            $scope.postssindatos = "No encontramos resultados";
           });
            $scope.tomarCategoria = function (elemento) {
             idnew = elemento;
           };
         });
     app.controller("PorCategoriaCtl", function($scope, $rootScope, position, $http, $rootScope) {
-      $http.get('https://viveenunclick.com/api.php/clientes?filter[]=id_categoria,eq,'+idnew+'&transform=1').success(function(data, status, headers, config) {
+      $http.get('https://viveenunclick.com/api.php/clientes?filter[]=id_categoria,eq,'+idnew+'&transform=1&order=nombre,asc').success(function(data, status, headers, config) {
         $scope.sucursalinfo = data.clientes;   //Trae toda la información de los clientes
         $scope.clienten = JSON.parse(data);
         $rootScope.latitude1c = $scope.clienten.Latitud;
@@ -117,7 +117,7 @@
         console.log($scope.clienten);
         console.log($rootScope.longitud1c);
         $rootScope.distancia1 = getDistanceFromLatLonInKm(position.latitude,position.longitude,$rootScope.latitude1c,$rootScope.longitud1c).toFixed(1);
-      }).error(function(data, status, headers, config) { }); //Sacar la imagen de la categoria
+      }).error(function(data, status, headers, config) {}); //Sacar la imagen de la categoria
       $http.get('https://viveenunclick.com/api.php/clientes_categorias/'+idnew).success(function(data, status, headers, config) {
         $scope.imagencategorias = data;
       }).error(function(data, status, headers, config) { });
@@ -131,6 +131,8 @@
         $scope.sucursalinfo = data;
         $rootScope.latitude = $scope.sucursalinfo.Latitud;
         $rootScope.longitud = $scope.sucursalinfo.Longitud;
+        $rootScope.milatd = position.latitude;
+        $rootScope.milongd = position.longitude;
         $rootScope.distancia = getDistanceFromLatLonInKm(position.latitude,position.longitude,$rootScope.latitude,$rootScope.longitud).toFixed(1);
       }).
       error(function(data, status, headers, config) {});
@@ -201,7 +203,6 @@
             <div class="center logo"><img ng-src="img/logo1.png"></div>
             <div class="homeUno">
               <div class="flecha"></div>
-              <h4 class="center">BUSCA TU NEGOCIO</h4>
               <div class="botonesHome">
               <ons-button modifier="outline" onclick="menu.setMainPage('categorias.html', {closeMenu: true})"><ons-icon icon="fa-sitemap"></ons-icon><br /><span class="letraHome">POR CATEGORIA</span></ons-button>
               <ons-button modifier="outline" onclick="menu.setMainPage('lista.html', {closeMenu: true})"><ons-icon icon="fa-street-view"></ons-icon><br /><span class="letraHome">CERCA DE MÍ</span></ons-button>
@@ -224,9 +225,9 @@
             <ons-page ng-controller="PostsCtrl">
                 <ons-toolbar>
                     <div class="left">
-                        <ons-toolbar-button onclick="menu.toggleMenu()">
+                      <ons-toolbar-button onclick="menu.toggleMenu()">
                         <ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em;"></ons-icon>
-                    </ons-toolbar-button>
+                      </ons-toolbar-button>
                     </div>
                     <div class="center">CATEGORÍAS</div>
                     <div class="right">
@@ -334,10 +335,11 @@
             <ons-page ng-controller="PorCategoriaCtl">
                 <ons-toolbar>
                     <div class="left">
-                      <ons-toolbar-button onclick="menu.toggleMenu()">
-                        <ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em;"></ons-icon>
+                      <ons-toolbar-button onclick="menu.setMainPage('categorias.html', {closeMenu: true})">
+                        <i class="fa fa-angle-left" style="font-size: 32px; width: 1em;" aria-hidden="true"></i>
+                      </ons-toolbar-button>
                     </div>
-                    <div class="center">Por Categoría</div>
+                    <div class="center">POR CATEGORÍA</div>
                     <div class="right">
                         <img class="logo_head" onclick="menu.setMainPage('page1.html', {closeMenu: true})" ng-src="img/logo_chico.png">
                     </div>
@@ -348,7 +350,6 @@
                     <ons-tab ng-click="menu.setMainPage('por_logo.html', {closeMenu: true}, {animation:'slide'})" label="Por Logo" icon="fa-star"></ons-tab>
                 </ons-tabbar>
                 <p>&nbsp;</p>
-                <div id="hola"></div>
                 <div class="categoriaImagen cabecera" style="background: url(https://viveenunclick.com/assets/images/imgclientes/imagenescategorias/{{imagencategorias.Imagen}});">
                     <div class="nombre_categoria timeline-name">{{imagencategorias.nombre}}</div>
                 </div>
@@ -369,67 +370,67 @@
                     </ons-row>
                   </ons-list-item>
                 </ons-list>
-                <div id="prueba"></div>
             </ons-page>
         </ons-template>
         <ons-template id="detalle.html">
           <ons-page ng-controller="DetalleCtl" class="sucursal_detail" ng-repeat="sucursalinfo in [sucursalinfo]">
               <ons-toolbar>
                 <div class="left">
-                      <ons-toolbar-button onclick="menu.toggleMenu()">
-                        <ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em;"></ons-icon>
-                    </div>
-                    <div class="center"> </div>
-                    <div class="right">
-                        <img class="logo_head" onclick="menu.setMainPage('page1.html', {closeMenu: true})" ng-src="img/logo_chico.png">
-                    </div>
+                  <ons-toolbar-button onclick="menu.toggleMenu()">
+                    <ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em;text-shadow: 2px 2px 2px #000;"></ons-icon>
+                  </ons-toolbar-button>
+                </div>
+                <div class="center"> </div>
+                <div class="right">
+                  <img class="logo_head" onclick="menu.setMainPage('page1.html', {closeMenu: true})" ng-src="img/logo_chico.png">
+                </div>
                 </ons-toolbar>
                 <div class="card" 
                      style="background-image: url(https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_panoramica}});">
-                    <div class="logotipo"><img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_logo}}"
-                                               class="thumbnail"></div>
+                    <div class="logotipo"><img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_logo}}" class="thumbnail"></div>
                     <div class="card-name">{{sucursalinfo.nombre}}</div>
                     <div class="tipo_comida">{{distancia}} Km</div>
                     <!-- <div class="card-desc">{{sucursalinfo.twitter}}</div> -->
                 </div>
                 <ons-list class="lista_detalle"><ons-list-item>
                 <ons-row class="action">
-
-                 <!--  <ons-col class="action-col">
-                    <div class="action-icon"><ons-icon icon="ion-ios-star-half"></ons-icon></div>
-                    <div class="action-label">Rate</div>
+                <ons-col class="action-col">
+                    <a target="_blank" data-rel="external" href="https://maps.google.com/maps?saddr={{milatd}},{{milongd}}&daddr={{sucursalinfo.Latitud}},{{sucursalinfo.Longitud}}&hl=es">
+                    <div class="action-icon"><ons-icon icon="fa-location-arrow"></ons-icon></div>
+                    <div class="action-label">Navegar</div>
+                    </a>
                   </ons-col>
-
-                  <ons-col class="action-col">
-                  <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                    <div class="action-icon"><ons-icon icon="ion-bookmark"></ons-icon></div>
-                    <div class="action-label">Favorite</div>
-                  </ons-col> -->
-
-                  <ons-col class="action-col">
-                    <div class="action-icon"><ons-icon icon="ion-share"></ons-icon></div>
+                  <ons-col class="action-col" ng-if="sucursalinfo.sitio_web">
+                    <a href="{{sucursalinfo.sitio_web}}" data-rel="external" onclick="{{sucursalinfo.sitio_web}}" target="_blank">
+                    <div class="action-icon"><ons-icon icon="fa-globe"></ons-icon></div>
+                    <div class="action-label">Sitio web</div>
+                    </a>
+                  </ons-col> 
+                  <ons-col class="action-col" ng-model="status" ng-init="status=false" ng-click="status=!status">
+                    <div class="action-icon"><ons-icon icon="fa-share-alt-square"></ons-icon></div>
                     <div class="action-label">Compartir</div>
                   </ons-col>
-
-                  <!-- <ons-col class="action-col" ng-if="!sucursalinfo.sitio_web">
-                   <a href="{{sucursalinfo.sitio_web}}" onclick="{{sucursalinfo.sitio_web}}" target="_black">
-                     <div class="action-icon"><ons-icon icon="ion-compose"></ons-icon></div>
-                    <div class="action-label">Sitio Web</div>
-                   </a>
-                  </ons-col> -->
-
                 </ons-row>
               </ons-list-item></ons-list>
               <!-- <div class="boton_menu" ng-if="sucursalinfo.telefono">
                   <a href="#" modifier="large--cta boton-detalle" onclick="tel:'{{sucursalinfo.telefono}}'">LLAMAR
                   </a>
               </div> -->
+              <div class="compartir" ng-show="status" >
+                <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A//viveenunclick.com/movil/detalle/{{sucursalinfo.url}}"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
+                <a target="_blank" href="https://twitter.com/home?status=https%3A//viveenunclick.com/movil/detalle/{{sucursalinfo.url}}"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+                <a target="_blank" href="https://plus.google.com/share?url=https%3A//viveenunclick.com/movil/detalle/{{sucursalinfo.url}}"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a>
+              </div>
                 <ul class="list detalle">
-                    <li class="list__item">
+                  <li class="list__item" ng-if="sucursalinfo.telefono">
+                        <ons-icon icon="fa-phone"></ons-icon>
+                        <b>Tel: {{sucursalinfo.telefono}}</b> 
+                    </li>
+                    <li class="list__item" ng-if="sucursalinfo.direccion">
                         <ons-icon icon="ion-location"></ons-icon>
                         <b>{{sucursalinfo.direccion}}</b> 
                     </li>
-                    <div class="a_domicilio">
+                    <div class="a_domicilio" ng-if="sucursalinfo.correo_contacto">
                         <li class="list__item">
                             <i class="fa fa-envelope" aria-hidden="true"></i>
                             <b>Correo:</b> {{sucursalinfo.correo_contacto}}
@@ -446,7 +447,7 @@
                 <div class="redes">
                   <a ng-if="sucursalinfo.facebook" target="_blank" href="{{sucursalinfo.facebook}}"><i class="fa fa-facebook-square" aria-hidden="true"></i> </a>
                   <a ng-if="sucursalinfo.twitter" target="_blank" href="{{sucursalinfo.twitter}}"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
-                  <a ng-if="sucursalinfo.instagram" target="_blank" href="{{sucursalinfo.instagram}}"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+                  <a ng-if="sucursalinfo.instagram" target="_blank" href="{{sucursalinfo.instagram}}"><i class="fa fa-instagram" aria-hidden="true"></i></a>
                   <a ng-if="sucursalinfo.youtube" target="_blank" href="{{sucursalinfo.youtube}}"><i class="fa fa-youtube-square" aria-hidden="true"></i></a>
                   <a ng-if="sucursalinfo.pinterest" target="_blank" href="{{sucursalinfo.pinterest}}"><i class="fa fa-pinterest-square" aria-hidden="true"></i></a>
                   <a ng-if="sucursalinfo.linkedin" target="_blank" href="{{sucursalinfo.linkedin}}"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
@@ -454,45 +455,13 @@
                 </div>
             </ons-page>
         </ons-template>
-        <ons-template id="buscar.html">
-          <ons-page>
-          <div class="center logo"><img ng-src="img/logo1.png"></div>
-          <div class="homeUno">
-              <h4 class="center">Busca tu negocio</h4>
-              <div class="flecha"></div>
-              <div class="botonesHome">
-              <ons-button modifier="outline" onclick="menu.setMainPage('categorias.html', {closeMenu: true})"><ons-icon icon="fa-sitemap"></ons-icon><br /><span class="letraHome">POR CATEGORIA</span></ons-button>
-              <ons-button modifier="outline"><ons-icon icon="fa-street-view"></ons-icon><br /><span class="letraHome">CERCA DE MÍ</span></ons-button>
-              <ons-button modifier="outline"><ons-icon icon="fa-diamond"></ons-icon><br /><span class="letraHome">POR LOGO</span></ons-button>
-              <ons-button modifier="outline"><ons-icon icon="fa-tags"></ons-icon><br /><span class="letraHome">POR NOMBRE</span></ons-button>
-              </div>
-          </div>
-          <div class="imagenHome"></div>
-          </ons-page>
-        </ons-template>
-        <ons-template id="aviso.html">
-          <ons-page>
-          <ons-toolbar>
-              <div class="left">
-                <ons-toolbar-button onclick="menu.toggleMenu()">
-                  <ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em;"></ons-icon>
-              </div>
-              <div class="center">Aviso de privacidad</div>
-              <div class="right">
-                  <img class="logo_head" onclick="menu.setMainPage('page1.html', {closeMenu: true})" ng-src="img/logo_chico.png">
-              </div>
-          </ons-toolbar>
-          <div class="content">
-            <p>Pendiente</p>
-          </div>
-          </ons-page>
-        </ons-template>
         <ons-template id="instrucciones.html">
           <ons-page>
           <ons-toolbar>
               <div class="left">
                 <ons-toolbar-button onclick="menu.toggleMenu()">
                   <ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em;"></ons-icon>
+                  </ons-toolbar-button>
               </div>
               <div class="center">INSTRUCTIVO</div>
               <div class="right">
@@ -542,9 +511,6 @@
                 </ons-list-item>
                 <ons-list-item modifier="chevron" onclick="menu.setMainPage('por_nombre.html', {closeMenu: true})">
                 <ons-icon icon="fa-street-view"></ons-icon> Por nombre
-                </ons-list-item>
-                <ons-list-item modifier="chevron" onclick="menu.setMainPage('aviso.html', {closeMenu: true})">
-                <ons-icon icon="fa-street-view"></ons-icon> Aviso de privacidad
                 </ons-list-item>
                 <ons-list-item modifier="chevron" onclick="menu.setMainPage('contacto.html', {closeMenu: true})">
                 <i class="fa fa-user" aria-hidden="true"></i> Contacto

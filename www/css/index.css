@@ -112,9 +112,18 @@ h1 {
     animation:fade 3000ms infinite;
     -webkit-animation:fade 3000ms infinite;
 }
-.center{text-align: center}
-.logo img{width: 56%;height: auto;margin: 0 auto;max-width: 400px;padding: 15px;max-height: 117px;}
-.homeUno{background: #E21D36;color: #fff;padding:5px 0 20px 0; height: 135px;text-align: center}
+.compartir, .center{text-align: center}
+.sucursal_detail 
+.compartir .fa{font-size: 40px; padding: 15px 5px;}
+.fa-facebook-square{color:#0063a9;}
+.fa-twitter-square{color: #00adff;}
+.fa-instagram{color: #8c5b02;}
+.fa-youtube-square{color: red;}
+.fa-pinterest-square{color: #d00808;}
+.fa-linkedin-square{color: #3d688c;}
+.fa-google-plus-square{color: #cc0e0e;}
+.logo img{width: 80%;height: auto;margin: 0 auto;max-width: 400px;padding: 15px;max-height: 206px;}
+.homeUno{background: #E21D36;color: #fff;padding:5px 0 20px 0; height: 120px;text-align: center}
 .homeUno ons-button{width: 25%; float: left; border-radius: 0 !important; padding: 0 !important;border: none;}
 .imagenHome{background: url(../img/imgmapa.png) center top no-repeat; width: 100%; height: 220px; background-size: cover;}
 .mapaHome{background: url(../img/panoramica.gif) center top no-repeat; width: 100%; height: 120px; background-size: cover;}
@@ -186,7 +195,7 @@ ons-tabbar{
   background-repeat: no-repeat;
   background-size: cover;
   color: white;
-  height: 290px;
+  height: 250px;
   background-position: center center;
 }
 .logotipo{    
@@ -200,16 +209,18 @@ ons-tabbar{
   color: #ffffff;
   text-align: center;
   position: relative;
-  top: 88px;
+  top: 38px;
   background: #530684;
   border-top: 4px solid #ff8100;
   padding: 8px;
-  width: 30%;
+  width: 33%;
   margin: 0 auto;
 }
 .logotipo img{  
     margin: 15px 0;
     height: 50px; 
+    padding: 5px;
+    background: #fff;
   -webkit-box-shadow: 3px 4px 3px 0px rgba(50, 50, 50, 0.75);
   -moz-box-shadow:    3px 4px 3px 0px rgba(50, 50, 50, 0.75);
   box-shadow:         3px 4px 3px 0px rgba(50, 50, 50, 0.75);
