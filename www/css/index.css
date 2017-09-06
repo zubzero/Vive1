@@ -478,3 +478,7 @@ ons-tabbar{
   line-height: 1.2;
   font-size: 13px;
 }
+ons-button a, ons-list-item a{
+  color: #fff !important;
+  text-decoration: none !important;
+}

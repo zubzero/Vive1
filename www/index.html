@@ -176,7 +176,7 @@
                       return f1.distance - f2.distance;
                   }).map(function (f) {
                     if (f.estado = 1 && f.id_categoria) {
-                      return "<li class='timeline-li' style='background:url(https://viveenunclick.com/assets/images/imgclientes/" + f.img_panoramica + ");'><a onclick='idnew="+f.id+"; menu.setMainPage(\"detalle.html\")'>" + "<div ng-if='" + f.img_logo + "'><img src='https://viveenunclick.com/assets/images/imgclientes/"+f.img_logo+"' class='timeline-image'></div><div class='timeline-date distancia'>" + f.distance + " Km</div>" + 
+                      return "<li class='timeline-li' style='background:url(https://viveenunclick.com/assets/images/imgclientes/fondo/" + f.img_movil + ");'><a onclick='idnew="+f.id+"; menu.setMainPage(\"detalle.html\")'>" + "<div ng-if='" + f.img_logo + "'><img src='https://viveenunclick.com/assets/images/imgclientes/"+f.img_logo+"' class='timeline-image'></div><div class='timeline-date distancia'>" + f.distance + " Km</div>" + 
                                           "<div class='timeline-from'><span class='timeline-name'>" + f.nombre + "</span></div></a></li>";                
                     };
                   })
@@ -214,7 +214,7 @@
           <div class="footer">
             <div class="botones">
               <ons-button onclick="menu.setMainPage('instrucciones.html', {closeMenu: true})"><i class="fa fa-book" aria-hidden="true"></i><br> INSTRUCTIVO</ons-button>
-              <ons-button><i class="fa fa-user" aria-hidden="true"></i><br> CONTACTO</ons-button>
+              <ons-button><a href="https://viveenunclick.com/movil/contacto" target="_blank"><i class="fa fa-user" aria-hidden="true"></i><br> CONTACTO</a></ons-button>
               <ons-button onclick="exitFromApp();"><i class="fa fa-power-off" aria-hidden="true"></i><br> SALIR</ons-button>
             </div>
             <div class="copy"><p>Vive en un Click &copy; 2017 | Versión: {{version}}</p></div>
@@ -354,7 +354,7 @@
                     <div class="nombre_categoria timeline-name">{{imagencategorias.nombre}}</div>
                 </div>
                 <ons-list class="timeline" modifier="inset">
-                  <ons-list-item ng-click="tomarelemento(post.id); menu.setMainPage('detalle.html', {closeMenu: true})" class="timeline-li" modifier="tappable" ng-repeat="post in sucursalinfo" ng-if="post.estado == '1'" style="background: url(https://viveenunclick.com/assets/images/imgclientes/{{post.img_panoramica}});">
+                  <ons-list-item ng-click="tomarelemento(post.id); menu.setMainPage('detalle.html', {closeMenu: true})" class="timeline-li" modifier="tappable" ng-repeat="post in sucursalinfo" ng-if="post.estado == '1'" style="background: url(https://viveenunclick.com/assets/images/imgclientes/fondo/{{post.img_movil}});">
                     <ons-row>
                       <ons-col>
                       <div ng-if="post.img_logo">
@@ -386,7 +386,7 @@
                 </div>
                 </ons-toolbar>
                 <div class="card" 
-                     style="background-image: url(https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_panoramica}});">
+                     style="background-image: url(https://viveenunclick.com/assets/images/imgclientes/fondo/{{sucursalinfo.img_movil}});">
                     <div class="logotipo"><img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_logo}}" class="thumbnail"></div>
                     <div class="card-name">{{sucursalinfo.nombre}}</div>
                     <div class="tipo_comida">{{distancia}} Km</div>
@@ -512,8 +512,8 @@
                 <ons-list-item modifier="chevron" onclick="menu.setMainPage('por_nombre.html', {closeMenu: true})">
                 <ons-icon icon="fa-street-view"></ons-icon> Por nombre
                 </ons-list-item>
-                <ons-list-item modifier="chevron" onclick="menu.setMainPage('contacto.html', {closeMenu: true})">
-                <i class="fa fa-user" aria-hidden="true"></i> Contacto
+                <ons-list-item modifier="chevron">
+                <a href="https://viveenunclick.com/movil/contacto" target="_blank"><i class="fa fa-user" aria-hidden="true"></i> Contacto</a>                
                 </ons-list-item> 
                 <ons-list-item modifier="chevron" onclick="exitFromApp();"><i class="fa fa-share" aria-hidden="true"></i> Salir</ons-list-item>
             </ons-list>
