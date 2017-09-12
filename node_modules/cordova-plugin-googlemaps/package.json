@@ -1,8 +1,8 @@
 {
   "_from": "cordova-plugin-googlemaps",
-  "_id": "cordova-plugin-googlemaps@1.4.5",
+  "_id": "cordova-plugin-googlemaps@2.0.6",
   "_inBundle": false,
-  "_integrity": "sha1-+p6j4p05SS7PgNLDgR5A4Lx+S3g=",
+  "_integrity": "sha1-hq7RWiCpX2B37CLlL+PSQMZD9F4=",
   "_location": "/cordova-plugin-googlemaps",
   "_phantomChildren": {},
   "_requested": {
@@ -19,10 +19,10 @@
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/cordova-plugin-googlemaps/-/cordova-plugin-googlemaps-1.4.5.tgz",
-  "_shasum": "fa9ea3e29d39492ecf80d2c3811e40e0bc7e4b78",
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-googlemaps/-/cordova-plugin-googlemaps-2.0.6.tgz",
+  "_shasum": "86aed15a20a95f6077ec22e52fe3d240c643f45e",
   "_spec": "cordova-plugin-googlemaps",
-  "_where": "C:\\Users\\Villber\\Documents\\app_manuel\\ViveEnUnClick\\node_modules",
+  "_where": "C:\\Users\\Villber\\Documents\\app_manuel\\ViveEnUnClick\\Vive1\\node_modules",
   "author": {
     "name": "Masashi Katsumata, Hirbod Mirjavadi"
   },
@@ -41,21 +41,16 @@
   "description": "Google Maps native SDK for Android and iOS",
   "engines": [
     {
-      "name": "cordova-android",
-      "version": ">=5.1.0"
-    },
-    {
-      "name": "cordova-ios",
-      "version": ">=4.0.0"
+      "name": "cordova",
+      "version": ">=6.2.0"
     }
   ],
-  "homepage": "https://github.com/mapsplugin/cordova-plugin-googlemaps#readme",
+  "homepage": "https://github.com/mapsplugin/cordova-plugin-googlemaps",
   "keywords": [
     "google",
     "maps",
     "geo",
     "google maps",
-    "nightstomp",
     "ecosystem:cordova",
     "cordova-android",
     "cordova-ios"
@@ -66,5 +61,5 @@
     "type": "git",
     "url": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git"
   },
-  "version": "1.4.5"
+  "version": "2.0.6"
 }

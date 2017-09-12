@@ -19,11 +19,11 @@
         "cordova-plugin-geolocation": {
             "PACKAGE_NAME": "com.viveenunclick.mx"
         },
-        "cordova-plugin-googlemaps": {
-            "API_KEY_FOR_ANDROID": "AIzaSyDCTVS77zM0c-fJaQILtEmTLzbhSrqeKO8",
+        "cordova-plugin-x-socialsharing": {
             "PACKAGE_NAME": "com.viveenunclick.mx"
         },
-        "cordova-plugin-x-socialsharing": {
+        "cordova-plugin-googlemaps": {
+            "API_KEY_FOR_ANDROID": "AIzaSyBezcuO8jYhYFaelSbKgLBEANYR-1uW_-Q",
             "PACKAGE_NAME": "com.viveenunclick.mx"
         }
     },

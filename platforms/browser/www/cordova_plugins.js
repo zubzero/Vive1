@@ -38,14 +38,6 @@ module.exports = [
         "runs": true
     },
     {
-        "file": "plugins/cordova-plugin-googlemaps/www/googlemaps-cdv-plugin.js",
-        "id": "cordova-plugin-googlemaps.cordova-plugin-googlemaps",
-        "pluginId": "cordova-plugin-googlemaps",
-        "clobbers": [
-            "cordova-plugin-googlemaps"
-        ]
-    },
-    {
         "file": "plugins/es6-promise-plugin/www/promise.js",
         "id": "es6-promise-plugin.Promise",
         "pluginId": "es6-promise-plugin",
@@ -68,7 +60,6 @@ module.exports.metadata =
     "cordova-plugin-network-information": "1.3.3",
     "cordova-plugin-geolocation": "2.4.3",
     "cordova-plugin-compat": "1.0.0",
-    "cordova-plugin-googlemaps": "1.4.5",
     "es6-promise-plugin": "4.1.0",
     "cordova-plugin-x-socialsharing": "5.1.8"
 }

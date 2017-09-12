@@ -19,10 +19,10 @@
         "cordova-plugin-geolocation": {
             "PACKAGE_NAME": "com.viveenunclick.mx"
         },
-        "cordova-plugin-googlemaps": {
+        "cordova-plugin-x-socialsharing": {
             "PACKAGE_NAME": "com.viveenunclick.mx"
         },
-        "cordova-plugin-x-socialsharing": {
+        "cordova-plugin-googlemaps": {
             "PACKAGE_NAME": "com.viveenunclick.mx"
         }
     },
