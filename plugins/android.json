@@ -22,10 +22,16 @@
         "cordova-plugin-googlemaps": {
             "API_KEY_FOR_ANDROID": "AIzaSyDCTVS77zM0c-fJaQILtEmTLzbhSrqeKO8",
             "PACKAGE_NAME": "com.viveenunclick.mx"
+        },
+        "cordova-plugin-x-socialsharing": {
+            "PACKAGE_NAME": "com.viveenunclick.mx"
         }
     },
     "dependent_plugins": {
         "cordova-plugin-compat": {
+            "PACKAGE_NAME": "com.viveenunclick.mx"
+        },
+        "es6-promise-plugin": {
             "PACKAGE_NAME": "com.viveenunclick.mx"
         }
     }

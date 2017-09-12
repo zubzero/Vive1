@@ -48,5 +48,21 @@
         "variables": {
             "API_KEY_FOR_ANDROID": "AIzaSyBezcuO8jYhYFaelSbKgLBEANYR-1uW_-Q --variable API_KEY_FOR_IOS=AIzaSyDCTVS77zM0c-fJaQILtEmTLzbhSrqeKO8"
         }
+    },
+    "cordova-plugin-x-socialsharing": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-x-socialsharing"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "es6-promise-plugin": {
+        "source": {
+            "type": "registry",
+            "id": "es6-promise-plugin@4.1.0"
+        },
+        "is_top_level": false,
+        "variables": {}
     }
 }

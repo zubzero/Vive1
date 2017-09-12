@@ -17,7 +17,9 @@
         "cordova-plugin-googlemaps": "^1.4.5",
         "cordova-plugin-network-information": "^1.3.3",
         "cordova-plugin-splashscreen": "^4.0.3",
-        "cordova-plugin-whitelist": "1"
+        "cordova-plugin-whitelist": "1",
+        "cordova-plugin-x-socialsharing": "^5.2.0",
+        "es6-promise-plugin": "^4.1.0"
     },
     "cordova": {
         "plugins": {
@@ -26,7 +28,9 @@
             "cordova-plugin-network-information": {},
             "cordova-plugin-geolocation": {
                 "GEOLOCATION_USAGE_DESCRIPTION": " "
-            }
+            },
+            "cordova-plugin-x-socialsharing": {},
+            "cordova-plugin-googlemaps": {}
         },
         "platforms": [
             "android",

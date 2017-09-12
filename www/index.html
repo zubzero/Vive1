@@ -88,17 +88,17 @@
       
     });
     app.controller("homeCtl", function($scope, position){
-      $scope.version = 0.80;
+      $scope.version = 0.85;
     });
             app.controller("CategoriaCtl", function($scope, $http, position) {
               var url = 'https://viveenunclick.com/api.php/clientes_categorias';
-              $http.get(url).success(function(response) {
+              $http.get(url, {cache: true}).success(function(response) {
                 $scope.clientes_categorias = php_crud_api_transform(response);
                 console.log($scope.clientes_categorias);
               });
             });
         app.controller("PostsCtrl", function($scope, $http, position) {
-          $http.get('https://viveenunclick.com/api.php/clientes_categorias?order=nombre,asc').success(function (data, status, headers, config) {
+          $http.get('https://viveenunclick.com/api.php/clientes_categorias?order=nombre,asc', {cache: true}).success(function (data, status, headers, config) {
             $scope.posts = php_crud_api_transform(data);
             // console.log($scope.posts)
           }).error(function (data, status, headers, config) {
@@ -108,17 +108,14 @@
             idnew = elemento;
           };
         });
-    app.controller("PorCategoriaCtl", function($scope, $rootScope, position, $http, $rootScope) {
-      $http.get('https://viveenunclick.com/api.php/clientes?filter[]=id_categoria,eq,'+idnew+'&transform=1&order=nombre,asc').success(function(data, status, headers, config) {
-        $scope.sucursalinfo = data.clientes;   //Trae toda la información de los clientes
-        $scope.clienten = JSON.parse(data);
-        $rootScope.latitude1c = $scope.clienten.Latitud;
-        $rootScope.longitud1c = $scope.clienten.Longitud;
-        console.log($scope.clienten);
-        console.log($rootScope.longitud1c);
-        $rootScope.distancia1 = getDistanceFromLatLonInKm(position.latitude,position.longitude,$rootScope.latitude1c,$rootScope.longitud1c).toFixed(1);
+    app.controller("PorCategoriaCtl", function($scope, $rootScope, position, $http) {
+      $http.get('https://viveenunclick.com/api.php/clientes?filter[]=id_categoria,eq,'+idnew+'&transform=1', {cache: true}).success(function(data, status, headers, config) {
+        $scope.sucursalinfo = data;   //Trae toda la información de los clientes
+        $scope.distanciaPC = function(itema) {
+            return getDistanceFromLatLonInKm(position.latitude,position.longitude,itema.Latitud,itema.Longitud);
+        };
       }).error(function(data, status, headers, config) {}); //Sacar la imagen de la categoria
-      $http.get('https://viveenunclick.com/api.php/clientes_categorias/'+idnew).success(function(data, status, headers, config) {
+      $http.get('https://viveenunclick.com/api.php/clientes_categorias/'+idnew, {cache: true}).success(function(data, status, headers, config) {
         $scope.imagencategorias = data;
       }).error(function(data, status, headers, config) { });
       $scope.tomarelemento = function (elemento) {
@@ -126,7 +123,7 @@
       };
     });
     app.controller("DetalleCtl", function($scope, position, $http, $rootScope) {
-      $http.get('https://viveenunclick.com/api.php/clientes/'+idnew).
+      $http.get('https://viveenunclick.com/api.php/clientes/'+idnew, {cache: true}).
       success(function(data, status, headers, config) {
         $scope.sucursalinfo = data;
         $rootScope.latitude = $scope.sucursalinfo.Latitud;
@@ -141,13 +138,16 @@
       console.log(comentario_sucursal);
       }
     });
-    app.controller("PorlogoCtl", function($scope, $http, position) {
-      $http.get('https://viveenunclick.com/api.php/clientes?transform=1').
+    app.controller("PorlogoCtl", function($scope, $http, position, $rootScope) {
+      $http.get('https://viveenunclick.com/api.php/clientes?transform=1', {cache: true}).
       success(function(data, status, headers, config) {
-        $scope.query = {};
-        $scope.queryBy = '$';
+        // $scope.query = {};
+        // $scope.queryBy = '$';
         $scope.orderProp="nombre";
         $scope.porlogo = data;
+        $scope.distancia = function(item) {
+            return getDistanceFromLatLonInKm(position.latitude,position.longitude,item.Latitud,item.Longitud);
+        };
       }).
       error(function(data, status, headers, config) {});
       $scope.tomarelemento = function (elemento) {
@@ -177,7 +177,7 @@
                   }).map(function (f) {
                     if (f.estado = 1 && f.id_categoria) {
                       return "<li class='timeline-li' style='background:url(https://viveenunclick.com/assets/images/imgclientes/fondo/" + f.img_movil + ");'><a onclick='idnew="+f.id+"; menu.setMainPage(\"detalle.html\")'>" + "<div ng-if='" + f.img_logo + "'><img src='https://viveenunclick.com/assets/images/imgclientes/"+f.img_logo+"' class='timeline-image'></div><div class='timeline-date distancia'>" + f.distance + " Km</div>" + 
-                                          "<div class='timeline-from'><span class='timeline-name'>" + f.nombre + "</span></div></a></li>";                
+                                          "<div class='timeline-from'><p class='timeline-name'>" + f.nombre + "</p><span class='timeline-id'>"+ f.Descripcion_Corta +"</span></div></a></li>";                
                     };
                   })
               );
@@ -249,8 +249,8 @@
             <ons-page ng-controller="ListaCtl">
                 <ons-toolbar>
                     <div class="left">
-                        <ons-toolbar-button onclick="menu.toggleMenu()">
-                        <ons-icon icon="ion-navicon" style="font-size: 32px; width: 1em;"></ons-icon>
+                      <ons-toolbar-button onclick="menu.setMainPage('page1.html', {closeMenu: true})">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
                     </ons-toolbar-button>
                     </div>
                     <div class="center">CERCA DE MÍ</div>
@@ -282,7 +282,7 @@
                     </div>
                 </ons-toolbar>
                 <div class="content-2">
-                  <div class="cliente" ng-repeat="cliente in porlogo.clientes" ng-click="tomarelemento(cliente.id); menu.setMainPage('detalle.html', {closeMenu: true})" ng-if="cliente.estado == '1' && cliente.id_categoria && cliente.img_logo">
+                  <div class="cliente" ng-repeat="cliente in porlogo.clientes | orderBy: distancia:reverse" ng-click="tomarelemento(cliente.id); menu.setMainPage('detalle.html', {closeMenu: true})" ng-if="cliente.estado == '1' && cliente.id_categoria && cliente.img_logo"><p class="corner-ribbon"><i class="fa fa-location-arrow" aria-hidden="true"></i> {{distancia(cliente) | number:1}} Km</p>
                     <img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{cliente.img_logo}}">
                   </div>
                 </div>
@@ -304,25 +304,29 @@
                 <div class="content-2">
                 <table style="position: relative;margin: 0 auto;">
                     <tr>
-                        <td><input class="enjoy-css" placeholder="Buscar por nombre" ng-model="query[queryBy]" /></td>
+                        <td><input type="text" class="enjoy-css" placeholder="Buscar por nombre" ng-model="searchKeyword"></td>
+                        
                     </tr>
                 </table>
                 <ons-list>
-                  <ons-list-item modifier="chevron" class="list-item-container" ng-repeat="cliente in porlogo.clientes | filter:query" ng-click="tomarelemento(cliente.id); menu.setMainPage('detalle.html', {closeMenu: true})" ng-if="cliente.estado == '1' && cliente.id_categoria && cliente.img_logo">
+                  <ons-list-item modifier="chevron" class="list-item-container" ng-repeat="cliente in porlogo.clientes | orderBy: distancia:reverse | filter: searchKeyword" ng-click="tomarelemento(cliente.id); menu.setMainPage('detalle.html', {closeMenu: true})" ng-if="cliente.estado == '1' && cliente.id_categoria && cliente.img_logo">
                     <ons-row>
                       <ons-col width="95px">
-                        <img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{cliente.img_logo}}" class="thumbnail">
+                        <img class="thumbnail" ng-src="https://viveenunclick.com/assets/images/imgclientes/{{cliente.img_logo}}">
+                        <div class="distancia_pornombre">
+                          <i class="fa fa-location-arrow" aria-hidden="true"></i> {{distancia(cliente) | number:1}} Km
+                        </div>
                       </ons-col>
                       <ons-col>
                         <div class="name">
                           {{cliente.nombre}}
                         </div>
-                        <div class="location" ng-if="cliente.telefono">
+                        <div class="description">
+                          {{cliente.Descripcion_Corta}}
+                        </div>
+                        <div class="telephone" ng-if="cliente.telefono">
                           <i class="fa fa-phone" aria-hidden="true"></i> {{cliente.telefono}}
-                        </div><!-- 
-                        <div class="desc" ng-if="cliente.direccion">
-                          {{cliente.direccion}}
-                        </div> -->
+                        </div>
                       </ons-col>
                       <ons-col width="40px"></ons-col>
                     </ons-row>
@@ -354,16 +358,16 @@
                     <div class="nombre_categoria timeline-name">{{imagencategorias.nombre}}</div>
                 </div>
                 <ons-list class="timeline" modifier="inset">
-                  <ons-list-item ng-click="tomarelemento(post.id); menu.setMainPage('detalle.html', {closeMenu: true})" class="timeline-li" modifier="tappable" ng-repeat="post in sucursalinfo" ng-if="post.estado == '1'" style="background: url(https://viveenunclick.com/assets/images/imgclientes/fondo/{{post.img_movil}});">
+                  <ons-list-item ng-click="tomarelemento(post.id); menu.setMainPage('detalle.html', {closeMenu: true})" class="timeline-li" modifier="tappable" ng-repeat="post in sucursalinfo.clientes | orderBy: distanciaPC:reverse" ng-if="post.estado == '1'" style="background: url(https://viveenunclick.com/assets/images/imgclientes/fondo/{{post.img_movil}});">
                     <ons-row>
                       <ons-col>
                       <div ng-if="post.img_logo">
                         <img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{post.img_logo}}" class="timeline-image">
                       </div>
-                        <!-- <div class="timeline-date">{{distancia1}} Km</div> -->
+                        <div class="timeline-date">{{distanciaPC(post) | number:1}} Km</div>
                         <div class="timeline-from">
-                          <span class="timeline-name">{{post.nombre}}</span>
-                          <span class="timeline-id"></span>
+                          <p class="timeline-name">{{post.nombre}}</p>
+                          <span class="timeline-id">{{post.Descripcion_Corta}}</span>
                         </div>
                         <div class="timeline-message"></div>
                       </ons-col>
@@ -387,7 +391,7 @@
                 </ons-toolbar>
                 <div class="card" 
                      style="background-image: url(https://viveenunclick.com/assets/images/imgclientes/fondo/{{sucursalinfo.img_movil}});">
-                    <div class="logotipo"><img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_logo}}" class="thumbnail"></div>
+                    <div class="logotipo"><img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_logo}}"></div>
                     <div class="card-name">{{sucursalinfo.nombre}}</div>
                     <div class="tipo_comida">{{distancia}} Km</div>
                     <!-- <div class="card-desc">{{sucursalinfo.twitter}}</div> -->
@@ -401,7 +405,7 @@
                     </a>
                   </ons-col>
                   <ons-col class="action-col" ng-if="sucursalinfo.sitio_web">
-                    <a href="{{sucursalinfo.sitio_web}}" data-rel="external" onclick="{{sucursalinfo.sitio_web}}" target="_blank">
+                    <a ng-href="{{sucursalinfo.sitio_web}}" data-rel="external" target="_blank">
                     <div class="action-icon"><ons-icon icon="fa-globe"></ons-icon></div>
                     <div class="action-label">Sitio web</div>
                     </a>
@@ -412,20 +416,20 @@
                   </ons-col>
                 </ons-row>
               </ons-list-item></ons-list>
-              <!-- <div class="boton_menu" ng-if="sucursalinfo.telefono">
-                  <a href="#" modifier="large--cta boton-detalle" onclick="tel:'{{sucursalinfo.telefono}}'">LLAMAR
-                  </a>
-              </div> -->
               <div class="compartir" ng-show="status" >
                 <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A//viveenunclick.com/movil/detalle/{{sucursalinfo.url}}"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
                 <a target="_blank" href="https://twitter.com/home?status=https%3A//viveenunclick.com/movil/detalle/{{sucursalinfo.url}}"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
                 <a target="_blank" href="https://plus.google.com/share?url=https%3A//viveenunclick.com/movil/detalle/{{sucursalinfo.url}}"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a>
+                <a target="_blank" href="https://api.whatsapp.com/send?text=Observa%20esta%20p%C3%A1gina%20-%20https%3A%2F%2Fviveenunclick.com%2Fmovil%2Fdetalle%2F{{sucursalinfo.url}}" data-action="share/whatsapp/share"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
+              </div>
+              <div class="content">
+                <md-button ng-if="sucursalinfo.telefono" class="md-raised md-primary"> </md-button>
+                <ons-button modifier="material">
+                <a ng-href="tel:+52{{sucursalinfo.telefono}}"><ons-icon icon="fa-phone"></ons-icon> Llamar</a>
+                </ons-button>
+                <p>{{sucursalinfo.Descripcion_Corta}}</p>
               </div>
                 <ul class="list detalle">
-                  <li class="list__item" ng-if="sucursalinfo.telefono">
-                        <ons-icon icon="fa-phone"></ons-icon>
-                        <b>Tel: {{sucursalinfo.telefono}}</b> 
-                    </li>
                     <li class="list__item" ng-if="sucursalinfo.direccion">
                         <ons-icon icon="ion-location"></ons-icon>
                         <b>{{sucursalinfo.direccion}}</b> 
@@ -433,7 +437,8 @@
                     <div class="a_domicilio" ng-if="sucursalinfo.correo_contacto">
                         <li class="list__item">
                             <i class="fa fa-envelope" aria-hidden="true"></i>
-                            <b>Correo:</b> {{sucursalinfo.correo_contacto}}
+                            <b>Correo:</b> {{sucursalinfo.correo_contacto}} <br />
+                            <b><i class="fa fa-clock-o" aria-hidden="true"></i> Horarios:</b> {{sucursalinfo.horario}}
                         </li>
                     </div>
                     <li class="list__item"><ng-map center="{{sucursalinfo.Latitud}},{{sucursalinfo.Longitud}}" zoom="15">
@@ -519,6 +524,7 @@
             </ons-list>
         </ons-template>
         <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="SocialSharing.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script src="./js/php_crud_api_transform.js"></script>
     </body>

@@ -43,7 +43,7 @@ body {
     padding:0px;
     width:100%;
 }
-
+.distancia{color: #e07e04;font-weight: bold;font-size: .7em;padding: 3px 0;}
 /* Portrait layout (default) */
 .app {
     background:url(../img/logo.png) no-repeat center top; /* 170px x 200px */
@@ -122,6 +122,7 @@ h1 {
 .fa-pinterest-square{color: #d00808;}
 .fa-linkedin-square{color: #3d688c;}
 .fa-google-plus-square{color: #cc0e0e;}
+.fa-whatsapp{color: #05b703;}
 .logo img{width: 80%;height: auto;margin: 0 auto;max-width: 400px;padding: 15px;max-height: 206px;}
 .homeUno{background: #E21D36;color: #fff;padding:5px 0 20px 0; height: 120px;text-align: center}
 .homeUno ons-button{width: 25%; float: left; border-radius: 0 !important; padding: 0 !important;border: none;}
@@ -315,7 +316,7 @@ ons-tabbar{
 .sucursal_detail .page__content{background: transparent !important; background-color: #fff !important;}
 .sucursal_detail ons-toolbar + .page__background + .page__content{top: 0;}
 .sucursal_detail .navigation-bar{background: transparent;}
-.sucursal_detail ons-button{background: #f96700;}
+.sucursal_detail ons-button{background: #015a61;color: #fff;position: relative;top: -15px;text-align: center;margin: 0 auto;display: block;}
 .redes{
     width: 100%;
     height: 50px;
@@ -405,16 +406,25 @@ ons-tabbar{
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
 }
-.timeline-from {position: absolute;bottom: 15px;}
+.timeline-from {position: absolute;
+    bottom: 15px;
+    display: block;
+    width: 95%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;}
 .timeline-name {
   font-size: 22px;
   font-weight: bolder;
   text-shadow: 2px 2px 1px rgba(0, 0, 0, 1);
   color: #fff;
+  padding: 0;
+  margin: 0;
 }
 .timeline-id {
-  font-size: 14px;
-  color: #fff;
+    font-size: 11px;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.83);
 }
 .timeline-message {
   margin-top: 4px;
@@ -428,7 +438,7 @@ ons-tabbar{
 .footer .copy{color: #fff; font-size: .7em; background: #621C46; padding: 3px 0}
 .content {
   width: 90%;
-  margin: 50px auto 0px auto;
+  margin: 28px auto 0px auto;
   text-align: justify;
 }
 .menu-pagina{background: #e21d36 !important;}
@@ -437,7 +447,7 @@ ons-tabbar{
 .onsen-sliding-menu__menu .page__content{background: #e21d36 !important;}
 .por_logo .page__background{background: #eaeaea !important;}
 .content-2{width: 90%; margin: 20px auto 0 auto;}
-.content-2 .cliente{width: 37%; height: auto; position: relative; background: #fff; padding: 10px; float: left;margin-bottom: 15px; border: 1px solid #d6d6d6;;}
+.content-2 .cliente{width: 46%;height: auto;position: relative;background: #fff;padding: 24px 0 0;float: left;margin-bottom: 15px;border: 1px solid #d6d6d6;}
 .cliente img{width: 100%; height: auto;}
 .content-2 .cliente:nth-child(odd){margin-right: 15px;}
 .enjoy-css {
@@ -478,7 +488,35 @@ ons-tabbar{
   line-height: 1.2;
   font-size: 13px;
 }
+.description{font-size: 10px;
+    color: #ff5400;}
+.telephone{
+  color: #04235f;font-size: x-small;
+    margin-top: 7px;
+    font-weight: 600;
+}
+.distancia_pornombre{
+  text-align: center;
+    padding: 5px;
+    background: #e4e4e4;
+    margin-right: 15px;
+    font-size: 10px;
+    color: #cc0000;
+    font-weight: bolder;
+}
 ons-button a, ons-list-item a{
   color: #fff !important;
   text-decoration: none !important;
+}
+.corner-ribbon{
+    background: #023d42;
+    position: absolute;
+    top: -12px;
+    right: 0;
+    left: 0;
+    padding: 5px;
+    border-top: 4px solid #e21d36;
+    text-align: center;
+    font-size: 11px;
+    color: #f0f0f0;
 }
