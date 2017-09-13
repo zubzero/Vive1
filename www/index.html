@@ -90,6 +90,46 @@
     app.controller("homeCtl", function($scope, position){
       $scope.version = 0.85;
     });
+    app.filter('tel', function () {
+    return function (tel) {
+        if (!tel) { return ''; }
+
+        var value = tel.toString().trim().replace(/^\+/, '');
+
+        if (value.match(/[^0-9]/)) {
+            return tel;
+        }
+
+        var country, city, number;
+
+        switch (value.length) {
+            case 1:
+            case 2:
+            case 3:
+                city = value;
+                break;
+
+            default:
+                city = value.slice(0, 2);
+                number = value.slice(2);
+        }
+
+        if(number){
+            if(number.length>3){
+                number = number.slice(0, 4) + '-' + number.slice(3,7);
+            }
+            else{
+                number = number;
+            }
+
+            return ("(" + city + ") " + number).trim();
+        }
+        else{
+            return "(" + city;
+        }
+
+    };
+});
             app.controller("CategoriaCtl", function($scope, $http, position) {
               var url = 'https://viveenunclick.com/api.php/clientes_categorias';
               $http.get(url, {cache: true}).success(function(response) {
@@ -176,8 +216,10 @@
                       return f1.distance - f2.distance;
                   }).map(function (f) {
                     if (f.estado = 1 && f.id_categoria) {
+                      var tel1 = f.telefono;
+                      var tel = tel1.slice(0, 4) + '-' + tel1.slice(3,7);
                       return "<li class='timeline-li' style='background:url(https://viveenunclick.com/assets/images/imgclientes/fondo/" + f.img_movil + ");'><a onclick='idnew="+f.id+"; menu.setMainPage(\"detalle.html\")'>" + "<div ng-if='" + f.img_logo + "'><img src='https://viveenunclick.com/assets/images/imgclientes/"+f.img_logo+"' class='timeline-image'></div><div class='timeline-date distancia'>" + f.distance + " Km</div>" + 
-                                          "<div class='timeline-from'><p class='timeline-name'>" + f.nombre + "</p><span class='timeline-id'>"+ f.Descripcion_Corta +"</span></div></a></li>";                
+                                          "<div class='timeline-message'><p>Tel: "+ tel +"</p></div><div class='timeline-from'><p class='timeline-name'>" + f.direccion + "</p><span class='timeline-id'>"+ f.Descripcion_Corta +"</span></div></a></li>";                
                     };
                   })
               );
@@ -284,6 +326,7 @@
                 <div class="content-2">
                   <div class="cliente" ng-repeat="cliente in porlogo.clientes | orderBy: distancia:reverse" ng-click="tomarelemento(cliente.id); menu.setMainPage('detalle.html', {closeMenu: true})" ng-if="cliente.estado == '1' && cliente.id_categoria && cliente.img_logo"><p class="corner-ribbon"><i class="fa fa-location-arrow" aria-hidden="true"></i> {{distancia(cliente) | number:1}} Km</p>
                     <img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{cliente.img_logo}}">
+                    <p class="giro">{{cliente.Descripcion_Corta}}</p>
                   </div>
                 </div>
             </ons-page>
@@ -313,9 +356,6 @@
                     <ons-row>
                       <ons-col width="95px">
                         <img class="thumbnail" ng-src="https://viveenunclick.com/assets/images/imgclientes/{{cliente.img_logo}}">
-                        <div class="distancia_pornombre">
-                          <i class="fa fa-location-arrow" aria-hidden="true"></i> {{distancia(cliente) | number:1}} Km
-                        </div>
                       </ons-col>
                       <ons-col>
                         <div class="name">
@@ -325,7 +365,7 @@
                           {{cliente.Descripcion_Corta}}
                         </div>
                         <div class="telephone" ng-if="cliente.telefono">
-                          <i class="fa fa-phone" aria-hidden="true"></i> {{cliente.telefono}}
+                          <i class="fa fa-location-arrow" aria-hidden="true"></i> {{distancia(cliente) | number:1}} Km
                         </div>
                       </ons-col>
                       <ons-col width="40px"></ons-col>
@@ -365,11 +405,12 @@
                         <img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{post.img_logo}}" class="timeline-image">
                       </div>
                         <div class="timeline-date">{{distanciaPC(post) | number:1}} Km</div>
+                        <div class="timeline-message"><p>Tel: {{post.telefono | tel}}</p></div>
                         <div class="timeline-from">
-                          <p class="timeline-name">{{post.nombre}}</p>
+                          <p class="timeline-name">{{post.direccion}}</p>
                           <span class="timeline-id">{{post.Descripcion_Corta}}</span>
                         </div>
-                        <div class="timeline-message"></div>
+                        
                       </ons-col>
                     </ons-row>
                   </ons-list-item>
