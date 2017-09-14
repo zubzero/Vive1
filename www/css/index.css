@@ -390,6 +390,7 @@ ons-tabbar{
   box-shadow: 2px 2px 2px #000;
   margin-bottom: 10px;
 }
+.fa-angle-left, .fa-chevron-left{padding: 0 0 4px 10px; background: rgba(226, 24, 55, 0.79);;text-shadow: 3px 2px 2px #000 !important;font-weight: bolder}
 .timeline-date {
     font-size: 12px;
     margin-top: 3px;
