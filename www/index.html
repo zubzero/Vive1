@@ -52,6 +52,7 @@
                   };
                   function error(err) {
                     console.warn('ERROR(' + err.code + '): ' + err.message);
+                    alert('No podemos acceder a tu Ubicación, revisa que este activado.');
                   };
               } else {
                 alert('No podemos acceder a tu GPS, revisa que este activado.');
@@ -88,7 +89,7 @@
       
     });
     app.controller("homeCtl", function($scope, position){
-      $scope.version = 0.93;
+      $scope.version = "1.0";
     });
     app.filter('tel', function () {
     return function (tel) {
@@ -231,7 +232,7 @@
     });
         </script>
     </head>
-  <body>
+  <body onload="onLoad()">
     <div class="app">
       <h1>Apache Cordova</h1>
       <div id="deviceready" class="blink">
@@ -323,6 +324,12 @@
                         <img class="logo_head" onclick="menu.setMainPage('page1.html', {closeMenu: true})" ng-src="img/logo_chico.png">
                     </div>
                 </ons-toolbar>
+                <ons-tabbar position="top">
+                    <ons-tab ng-click="menu.setMainPage('lista.html', {closeMenu: true}, {animation:'slide'})" label="Cerca de mí" icon="fa-street-view"></ons-tab>
+                    <ons-tab ng-click="menu.setMainPage('categorias.html', {closeMenu: true}, {animation:'slide'})" label="Por Categoría" icon="fa-sitemap"></ons-tab>
+                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="Por nombre" icon="fa-tags"></ons-tab>
+                </ons-tabbar>
+                <p>&nbsp;</p>
                 <div class="content-2">
                   <div class="cliente" ng-repeat="cliente in porlogo.clientes | orderBy: distancia:reverse" ng-click="tomarelemento(cliente.id); menu.setMainPage('detalle_logo.html', {closeMenu: true})" ng-if="cliente.estado == '1' && cliente.id_categoria && cliente.img_logo"><p class="corner-ribbon"><i class="fa fa-location-arrow" aria-hidden="true"></i> {{distancia(cliente) | number:1}} Km</p>
                     <img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{cliente.img_logo}}">
@@ -344,6 +351,12 @@
                         <img class="logo_head" onclick="menu.setMainPage('page1.html', {closeMenu: true})" ng-src="img/logo_chico.png">
                     </div>
                 </ons-toolbar>
+                <ons-tabbar position="top">
+                    <ons-tab ng-click="menu.setMainPage('lista.html', {closeMenu: true}, {animation:'slide'})" label="Cerca de mí" icon="fa-street-view"></ons-tab>
+                    <ons-tab ng-click="menu.setMainPage('categorias.html', {closeMenu: true}, {animation:'slide'})" label="Por Categoría" icon="fa-sitemap"></ons-tab>
+                    <ons-tab ng-click="menu.setMainPage('por_logo.html', {closeMenu: true}, {animation:'slide'})" label="Por Logo" icon="fa-star"></ons-tab>
+                </ons-tabbar>
+                <p>&nbsp;</p>
                 <div class="content-2">
                 <table style="position: relative;margin: 0 auto;">
                     <tr>
@@ -820,5 +833,18 @@
         <script type="text/javascript" src="SocialSharing.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script src="./js/php_crud_api_transform.js"></script>
+        <script>
+          function onLoad() {
+        document.addEventListener("deviceready", onDeviceReady, false);
+          }
+          function onDeviceReady() {
+              document.addEventListener("backbutton", onBackKeyDown, false);
+          }
+          function onBackKeyDown() {
+            alert('Retornar');
+            return false;
+            $window.history.back();
+          }
+        </script>
     </body>
 </html>
