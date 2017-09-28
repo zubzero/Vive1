@@ -88,8 +88,12 @@
       return position;
       
     });
-    app.controller("homeCtl", function($scope, position){
+    app.controller("homeCtl", function($scope, position, $http){
       $scope.version = "1.0";
+    $http.get('https://viveenunclick.com/api.php/bannerportada?order=orden,asc', {cache: true}).success(function (data, status, headers, config) {
+      $scope.banner = php_crud_api_transform(data);
+    }).error(function (data, status, headers, config) {
+      });
     });
     app.filter('tel', function () {
     return function (tel) {
@@ -253,7 +257,7 @@
               <ons-button modifier="outline" onclick="menu.setMainPage('por_nombre.html', {closeMenu: true})"><ons-icon icon="fa-tags"></ons-icon><br /><span class="letraHome">POR NOMBRE</span></ons-button>
                 </div>
             </div>
-          <div class="imagenHome"></div><div class="mapaHome"></div>
+              <a ng-repeat="banner in banner.bannerportada" ng-if="banner.estado == '1'" target="_blank" ng-href="{{banner.url}}" class="bannerImagen" style="background: url('https://viveenunclick.com/assets/images/imgclientes/{{banner.imagen}}') no-repeat;"></a>
           <div class="footer">
             <div class="botones">
               <ons-button onclick="menu.setMainPage('instrucciones.html', {closeMenu: true})"><i class="fa fa-book" aria-hidden="true"></i><br> INSTRUCTIVO</ons-button>
@@ -445,8 +449,8 @@
                 </ons-toolbar>
                 <div class="card" 
                      style="background-image: url(https://viveenunclick.com/assets/images/imgclientes/fondo/{{sucursalinfo.img_movil}});">
-                    <div class="logotipo"><img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_logo}}"></div>
-                    <div class="card-name">{{sucursalinfo.nombre}}</div>
+                    <!-- <div class="logotipo"><img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_logo}}"></div>
+                    <div class="card-name">{{sucursalinfo.nombre}}</div> -->
                     <div class="tipo_comida">{{distancia}} Km</div>
                     <!-- <div class="card-desc">{{sucursalinfo.twitter}}</div> -->
                 </div>
@@ -482,7 +486,9 @@
                 <a ng-href="tel:+52{{sucursalinfo.telefono}}"><ons-icon icon="fa-phone"></ons-icon> Llamar</a>
                 </ons-button>
                 <p>{{sucursalinfo.Descripcion_Corta}}</p>
+                <p class="notas">{{sucursalinfo.notas}}</p>
               </div>
+
                 <ul class="list detalle">
                     <li class="list__item" ng-if="sucursalinfo.direccion">
                         <ons-icon icon="ion-location"></ons-icon>
@@ -529,8 +535,8 @@
                 </ons-toolbar>
                 <div class="card" 
                      style="background-image: url(https://viveenunclick.com/assets/images/imgclientes/fondo/{{sucursalinfo.img_movil}});">
-                    <div class="logotipo"><img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_logo}}"></div>
-                    <div class="card-name">{{sucursalinfo.nombre}}</div>
+                    <!-- <div class="logotipo"><img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_logo}}"></div>
+                    <div class="card-name">{{sucursalinfo.nombre}}</div> -->
                     <div class="tipo_comida">{{distancia}} Km</div>
                     <!-- <div class="card-desc">{{sucursalinfo.twitter}}</div> -->
                 </div>
@@ -566,6 +572,7 @@
                 <a ng-href="tel:+52{{sucursalinfo.telefono}}"><ons-icon icon="fa-phone"></ons-icon> Llamar</a>
                 </ons-button>
                 <p>{{sucursalinfo.Descripcion_Corta}}</p>
+                <p class="notas">{{sucursalinfo.notas}}</p>
               </div>
                 <ul class="list detalle">
                     <li class="list__item" ng-if="sucursalinfo.direccion">
@@ -613,8 +620,8 @@
                 </ons-toolbar>
                 <div class="card" 
                      style="background-image: url(https://viveenunclick.com/assets/images/imgclientes/fondo/{{sucursalinfo.img_movil}});">
-                    <div class="logotipo"><img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_logo}}"></div>
-                    <div class="card-name">{{sucursalinfo.nombre}}</div>
+                    <!-- <div class="logotipo"><img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_logo}}"></div>
+                    <div class="card-name">{{sucursalinfo.nombre}}</div> -->
                     <div class="tipo_comida">{{distancia}} Km</div>
                     <!-- <div class="card-desc">{{sucursalinfo.twitter}}</div> -->
                 </div>
@@ -650,6 +657,7 @@
                 <a ng-href="tel:+52{{sucursalinfo.telefono}}"><ons-icon icon="fa-phone"></ons-icon> Llamar</a>
                 </ons-button>
                 <p>{{sucursalinfo.Descripcion_Corta}}</p>
+                <p class="notas">{{sucursalinfo.notas}}</p>
               </div>
                 <ul class="list detalle">
                     <li class="list__item" ng-if="sucursalinfo.direccion">
@@ -697,8 +705,8 @@
                 </ons-toolbar>
                 <div class="card" 
                      style="background-image: url(https://viveenunclick.com/assets/images/imgclientes/fondo/{{sucursalinfo.img_movil}});">
-                    <div class="logotipo"><img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_logo}}"></div>
-                    <div class="card-name">{{sucursalinfo.nombre}}</div>
+                    <!-- <div class="logotipo"><img ng-src="https://viveenunclick.com/assets/images/imgclientes/{{sucursalinfo.img_logo}}"></div>
+                    <div class="card-name">{{sucursalinfo.nombre}}</div> -->
                     <div class="tipo_comida">{{distancia}} Km</div>
                     <!-- <div class="card-desc">{{sucursalinfo.twitter}}</div> -->
                 </div>
@@ -734,6 +742,7 @@
                 <a ng-href="tel:+52{{sucursalinfo.telefono}}"><ons-icon icon="fa-phone"></ons-icon> Llamar</a>
                 </ons-button>
                 <p>{{sucursalinfo.Descripcion_Corta}}</p>
+                <p class="notas">{{sucursalinfo.notas}}</p>
               </div>
                 <ul class="list detalle">
                     <li class="list__item" ng-if="sucursalinfo.direccion">
