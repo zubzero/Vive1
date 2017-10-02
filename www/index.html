@@ -89,7 +89,7 @@
       
     });
     app.controller("homeCtl", function($scope, position, $http){
-      $scope.version = "1.0";
+      $scope.version = "1.0.1";
     $http.get('https://viveenunclick.com/api.php/bannerportada?order=orden,asc', {cache: true}).success(function (data, status, headers, config) {
       $scope.banner = php_crud_api_transform(data);
     }).error(function (data, status, headers, config) {
