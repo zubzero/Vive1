@@ -126,8 +126,8 @@ h1 {
 .logo img{width: 80%;height: auto;margin: 0 auto;max-width: 400px;padding: 15px;max-height: 206px;}
 .homeUno{background: #E21D36;color: #fff;padding:5px 0 20px 0; height: 120px;text-align: center}
 .homeUno ons-button{width: 25%; float: left; border-radius: 0 !important; padding: 0 !important;border: none;}
-.imagenHome{background: url(../img/imgmapa.png) center top no-repeat; width: 100%; height: 220px; background-size: cover;}
-.mapaHome{background: url(../img/panoramica.gif) center top no-repeat; width: 100%; height: 120px; background-size: cover;}
+.imagenHome{background: url(../img/imgmapa.png) center top no-repeat; width: 100%; height: 155px; background-size: contain;}
+.mapaHome{background: url(../img/panoramica.gif) center top no-repeat; width: 100%; height: 91px; background-size: contain;}
 .homeUno ons-button:after{
     content: "";
     width: 10px;
@@ -174,11 +174,18 @@ ons-tabbar{
   -moz-box-shadow: inset 0px -48px 99px 0 rgba(0,0,0);
   box-shadow: inset 0px -48px 99px 0 rgb(0, 0, 0);
 }
+.bannerImagen{
+    height: 115px;
+    width: 100%;
+    display: block;
+    z-index: 999;
+    background-size: cover !important;
+}
 .cabecera{top:-6px;  border-bottom: 5px solid #013c42; height: 100px;
   -webkit-box-shadow: inset 0px 50px 99px 0 rgb(4, 54, 58);
   -moz-box-shadow: inset 0px 50px 99px 0 rgb(4, 54, 58);
   box-shadow: inset 0px 50px 99px 0 rgb(4, 54, 58);}
-.nombre_categoria{top: 36px; position: relative;}
+.nombre_categoria{top: 36px; position: relative;font-size: 22px !important;}
 .categoriaImagen img{width: 100%; height: 140px;}
 .categoriaImagen span{position: absolute; bottom: 0; text-transform: uppercase; left: 20px;color: #fff; font-weight: bold; text-shadow: 2px 2px 1px rgba(0, 0, 0, 1); font-size: 1.1em;}
 .timeline {
@@ -209,8 +216,10 @@ ons-tabbar{
 .card .tipo_comida{
   color: #ffffff;
   text-align: center;
-  position: relative;
-  top: 38px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 210px;
   background: #530684;
   border-top: 4px solid #ff8100;
   padding: 8px;
@@ -390,6 +399,7 @@ ons-tabbar{
   box-shadow: 2px 2px 2px #000;
   margin-bottom: 10px;
 }
+.fa-angle-left, .fa-chevron-left{padding: 0 0 4px 10px; background: rgba(226, 24, 55, 0.79);;text-shadow: 3px 2px 2px #000 !important;font-weight: bolder}
 .timeline-date {
     font-size: 12px;
     margin-top: 3px;
@@ -409,30 +419,34 @@ ons-tabbar{
 .timeline-from {position: absolute;
     bottom: 15px;
     display: block;
-    width: 95%;
-    overflow: hidden;
-    white-space: nowrap;
+    width: 90%;
     text-overflow: ellipsis;}
 .timeline-name {
-  font-size: 22px;
-  font-weight: bolder;
-  text-shadow: 2px 2px 1px rgba(0, 0, 0, 1);
-  color: #fff;
-  padding: 0;
-  margin: 0;
+  font-size: 10px;
+    font-weight: bolder;
+    width: 100%;
+    word-wrap: normal;
+    text-shadow: 2px 2px 1px rgba(0, 0, 0, 1);
+    color: #fff;
+    margin: 0;
 }
 .timeline-id {
-    font-size: 11px;
+    font-size: 10px;
     font-style: italic;
-    color: rgba(255, 255, 255, 0.83);
+    color: rgba(249, 175, 8, 0.83);
 }
 .timeline-message {
-  margin-top: 4px;
-  font-size: 14px;
+    font-size: 11px;
+  position: absolute;
   opacity: 0.8;
+  right: 15px;
+  color: #ffffff;
+  top: 42px;
   line-height: 1.15;
+  text-shadow: 1px 1px 0px #000;
+  font-weight: bolder;
 }
-.footer{position: absolute; bottom: 0; width: 100%; height: auto; text-align: center; background: #e21d36;}
+.footer{width: 100%; height: auto; text-align: center; background: #e21d36;}
 .footer .botones i{font-size: 25px; padding: 0; margin: 0; position: relative;top: 10px;}
 .footer .botones ons-button{background: transparent !important; color: #fff;width: 30%;font-size: 11px;}
 .footer .copy{color: #fff; font-size: .7em; background: #621C46; padding: 3px 0}
@@ -441,13 +455,19 @@ ons-tabbar{
   margin: 28px auto 0px auto;
   text-align: justify;
 }
+.giro{    font-size: 7px;
+    text-transform: uppercase;
+    color: rgb(2, 61, 66);
+    margin: 0 auto;
+    padding: 4px;
+    width: 88%;}
 .menu-pagina{background: #e21d36 !important;}
 .lista-menu{background: #9c0114;;}
 .lista-menu ons-list-item{color: #fff;}
 .onsen-sliding-menu__menu .page__content{background: #e21d36 !important;}
 .por_logo .page__background{background: #eaeaea !important;}
 .content-2{width: 90%; margin: 20px auto 0 auto;}
-.content-2 .cliente{width: 46%;height: auto;position: relative;background: #fff;padding: 24px 0 0;float: left;margin-bottom: 15px;border: 1px solid #d6d6d6;}
+.content-2 .cliente{width: 46%;height: auto;position: relative;background: #fff;text-align: center; padding: 24px 0 0;float: left;margin-bottom: 15px;border: 1px solid #d6d6d6;}
 .cliente img{width: 100%; height: auto;}
 .content-2 .cliente:nth-child(odd){margin-right: 15px;}
 .enjoy-css {
@@ -520,3 +540,5 @@ ons-button a, ons-list-item a{
     font-size: 11px;
     color: #f0f0f0;
 }
+
+.notas{background: #ffedda;; padding: 10px;}
