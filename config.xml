@@ -24,10 +24,10 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-    <plugin name="cordova-plugin-googlemaps" spec="2.2.2" source="npm">
-         <param name="API_KEY_FOR_ANDROID" value="AIzaSyBezcuO8jYhYFaelSbKgLBEANYR-1uW_-Q" />
-         <param name="API_KEY_FOR_IOS" value="AIzaSyDCTVS77zM0c-fJaQILtEmTLzbhSrqeKO8" />
-     </plugin>
+    <plugin name="cordova-plugin-googlemaps" source="npm" spec="2.2.2">
+        <param name="API_KEY_FOR_ANDROID" value="AIzaSyBezcuO8jYhYFaelSbKgLBEANYR-1uW_-Q" />
+        <param name="API_KEY_FOR_IOS" value="AIzaSyDCTVS77zM0c-fJaQILtEmTLzbhSrqeKO8" />
+    </plugin>
     <platform name="android">
         <allow-intent href="market:*" />
         <preference name="SplashScreen" value="/img/splash.jpg" />
