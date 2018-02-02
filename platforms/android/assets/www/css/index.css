@@ -124,7 +124,7 @@ h1 {
 .fa-google-plus-square{color: #cc0e0e;}
 .fa-whatsapp{color: #05b703;}
 .logo img{width: 80%;height: auto;margin: 0 auto;max-width: 400px;padding: 15px;max-height: 206px;}
-.homeUno{background: #E21D36;color: #fff;padding:5px 0 20px 0; height: 120px;text-align: center}
+.homeUno{background: #E21D36;color: #fff;padding:5px 0 5px 0; height: 120px;text-align: center}
 .homeUno ons-button{width: 25%; float: left; border-radius: 0 !important; padding: 0 !important;border: none;}
 .imagenHome{background: url(../img/imgmapa.png) center top no-repeat; width: 100%; height: 155px; background-size: contain;}
 .mapaHome{background: url(../img/panoramica.gif) center top no-repeat; width: 100%; height: 91px; background-size: contain;}
@@ -447,8 +447,8 @@ ons-tabbar{
   font-weight: bolder;
 }
 .footer{width: 100%; height: auto; text-align: center; background: #e21d36;}
-.footer .botones i{font-size: 25px; padding: 0; margin: 0; position: relative;top: 10px;}
-.footer .botones ons-button{background: transparent !important; color: #fff;width: 30%;font-size: 11px;}
+.footer .botones i, .footer .botones img{font-size: 25px; padding: 0; margin: 0; position: relative;top: 10px;}
+.footer .botones ons-button{background: transparent !important; color: #fff;width: 23%;font-size: 9px;}
 .footer .copy{color: #fff; font-size: .7em; background: #621C46; padding: 3px 0}
 .content {
   width: 90%;
@@ -540,5 +540,13 @@ ons-button a, ons-list-item a{
     font-size: 11px;
     color: #f0f0f0;
 }
-
-.notas{background: #ffedda;; padding: 10px;}
+.ruleta_home{    height: 50px;
+    margin: 0 auto;
+    width: 100%;
+    background-color: #E21D36;
+    position: relative;
+    text-align: center;}
+.ruleta_home ons-button{text-align: center; color: white; font-size: 8px;border: 0;}
+.ruleta_home .letraRuleta{position: relative;top: -20px;}
+.notas{background: #ffedda; padding: 10px;}
+.ruleta .page__background{background: url(../img/back.jpg) no-repeat #ccc center bottom !important; background-size: cover !important;}

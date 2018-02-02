@@ -1,0 +1,298 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Ruleta de la suerte :: Vive en un Click</title>
+        <link rel="stylesheet" href="main.css" type="text/css" />
+        <script type="text/javascript" src="Winwheel.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <!-- <script type="text/javascript" src="php_crud.js"></script> -->
+        <style>
+            body{background: url(back.jpg) no-repeat bottom center; background-size: cover;}
+            html, body {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;z-index: 0}
+            .confetti {
+                position: absolute;
+                width: 7px;
+                height: 10px;
+                top: -11px;
+                z-index: 1;
+            }
+.i1 {
+    background-color: rgb(232, 48, 24);
+    animation: red 9s linear;
+}
+.i2 {
+    background-color: rgb(24, 232, 48);
+    animation: green 8s linear;
+}
+.i3 {
+    background-color: rgb(24, 48, 232);
+    animation: blue 7s linear;
+}
+@keyframes red {
+    0% {
+        top: -8px;
+        transform: rotate(-360deg) rotateX(-270deg) rotateY(-180deg);
+    }
+    100% {
+        top: 101%;
+        transform: rotate(180deg) rotateX(270deg) rotateY(360deg);
+    }
+}
+@keyframes green {
+    0% {
+        top: -8px;
+        transform: rotate(-270deg) rotateX(-180deg) rotateY(0deg);
+    }
+    100% {
+        top: 101%;
+        transform: rotate(0deg) rotateX(180deg) rotateY(270deg);
+    }
+}
+@keyframes blue {
+    0% {
+        top: -8px;
+        transform: rotate(-180deg) rotateX(-90deg) rotateY(0deg);
+    }
+    100% {
+        top: 101%;
+        transform: rotate(0deg) rotateX(900deg) rotateY(180deg);
+    }
+}
+/*Countdown style*/
+#the-24h-countdown {
+  text-align: center;
+  font-size: 13px;
+  color: white;
+  margin:0 auto;
+  width: 100%
+}
+#the-24h-countdown span {background:#222;color:#f4f4f4; display:inline-block; padding: 10px;float:left;margin-left:20px;border-radius:10px;}
+
+#the-24h-countdown .min:before, #the-24h-countdown .seg:before {
+  content:':';
+  color:#fff;
+  margin-left:-23px;
+  margin-right:26px;
+}
+.tempo li {text-align:left ;display:inline-block;margin-left:-1px;}
+        </style>
+    </head>
+    <body>
+        <div align="center">
+            <h3>Tira la ruleta para ganar una de nuestras excelentes promociones</h3>
+            <p style="color: yellow;">Gana desde descuentos, cortesias, degustaciones, dinero virtual, etc.</p>
+            <pre id="output"></pre>
+            <br />
+            <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td>
+                    <div style="display: none" class="power_controls">
+                        <br />
+                        <br />
+                        <table class="power" cellpadding="10" cellspacing="0">
+                            <tr>
+                                <th align="center">Power</th>
+                            </tr>
+                            <tr>
+                                <td width="78" align="center" id="pw3" onClick="powerSelected(3);">High</td>
+                            </tr>
+                            <tr>
+                                <td align="center" id="pw2" onClick="powerSelected(2);">Med</td>
+                            </tr>
+                            <tr>
+                                <td align="center" id="pw1" onClick="powerSelected(1);">Low</td>
+                            </tr>
+                        </table>
+                        <br />
+                        <br /><br />
+                    <a href="#" onClick="resetWheel(); return false;">Play Again</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reset)
+                    </div>
+                    
+                    
+                </td>
+                <td width="315" height="315" class="the_wheel" align="center" valign="center">
+                    <img id="spin_button" src="button.png" alt="Spin" onClick="startSpin();" />
+                    <canvas id="canvas" width="315" height="315">
+                        <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p>
+                    </canvas>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><br>
+                    <br>
+                    <div id="the-24h-countdown"><p></p></div></td>
+            </tr>
+        </table>
+        <script>
+            if (!localStorage.puntosiniciales){
+                localStorage.puntosiniciales = 80;
+                alert("Has obtenido tus primeros 80 puntos, registrate para ponerlos en tu cuenta.");
+            };
+            // Create new wheel object specifying the parameters at creation time.
+            var theWheel = new Winwheel({
+                'numSegments'       : 12,         // Specify number of segments.
+                'outerRadius'       : 150,       // Set outer radius so wheel fits inside the background.
+                'drawMode'          : 'image',   // drawMode must be set to image.
+                'drawText'          : true,      // Need to set this true if want code-drawn text on image wheels.
+                'textFontSize'      : 12,        // Set text options as desired.
+                'textOrientation'   : 'curved',
+                'textDirection'     : 'reversed',
+                'textMargin'        : 5,
+                'textLineWidth'     : 2,
+                'textFillStyle'     : '',
+                'segments'     :                // Define segments.
+                [
+                   {'text' : ' Has ganado un cupón 2x1 en bebidas internacionales'},
+                   {'text' : ' Recibe un 15% de descuento en tu consumo total de lunes a viernes'},
+                   {'text' : '¡Recibe un cono gratis en la compra de tu paquete o combo del día!'},
+                   {'text' : ' Has ganado un cupón 2x1 en bebidas internacionales'},
+                   {'text' : ' Recibe un 25% de descuento en tu consumo total de lunes a viernes'},
+                   {'text' : '¡Recibe un cono gratis en la compra de tu paquete o combo del día!'},
+                   {'text' : ' Has ganado un cupón 2x1 en bebidas internacionales'},
+                   {'text' : ' Recibe un 35% de descuento en tu consumo total de lunes a viernes'},
+                   {'text' : '¡Recibe la bebida que sigue al mismo precio!'},
+                   {'text' : ' Has ganado un cupón 2x1 en combos'},
+                   {'text' : '¡Recibe un regalo por $20 pesos más!'},
+                   {'text' : '¡Recibe un 20% de descuento en tu proxima visita al dentista!'}
+                ],
+                'animation' :                   // Specify the animation to use.
+                {
+                    'type'     : 'spinToStop',
+                    'duration' : 5,     // Duration in seconds.
+                    'spins'    : 12,     // Number of complete spins.
+                    'callbackFinished' : 'alertPrize()'
+                }
+            });
+
+            // Create new image object in memory.
+            var loadedImg = new Image();
+
+            // Create callback to execute once the image has finished loading.
+            loadedImg.onload = function()
+            {
+                theWheel.wheelImage = loadedImg;    // Make wheelImage equal the loaded image object.
+                theWheel.draw();                    // Also call draw function to render the wheel.
+            }
+
+            // Set the image source, once complete this will trigger the onLoad callback (above).
+            loadedImg.src = "ruleta.png";
+
+
+
+            // Vars used by the code in this page to do power controls.
+            var wheelPower    = 0;
+            var wheelSpinning = false;
+
+            // -------------------------------------------------------
+            // Function to handle the onClick on the power buttons.
+            // -------------------------------------------------------
+            function powerSelected(powerLevel)
+            {
+                // Ensure that power can't be changed while wheel is spinning.
+                if (wheelSpinning == false)
+                {
+                    // Reset all to grey incase this is not the first time the user has selected the power.
+                    document.getElementById('pw1').className = "";
+                    document.getElementById('pw2').className = "";
+                    document.getElementById('pw3').className = "";
+
+                    // Now light up all cells below-and-including the one selected by changing the class.
+                    if (powerLevel >= 1)
+                    {
+                        document.getElementById('pw1').className = "pw1";
+                    }
+
+                    if (powerLevel >= 2)
+                    {
+                        document.getElementById('pw2').className = "pw2";
+                    }
+
+                    if (powerLevel >= 3)
+                    {
+                        document.getElementById('pw3').className = "pw3";
+                    }
+
+                    // Set wheelPower var used when spin button is clicked.
+                    wheelPower = powerLevel;
+
+                    // Light up the spin button by changing it's source image and adding a clickable class to it.
+                    document.getElementById('spin_button').src = "spin_on.png";
+                    document.getElementById('spin_button').className = "clickable";
+                }
+            }
+
+            // -------------------------------------------------------
+            // Click handler for spin button.
+            // -------------------------------------------------------
+            function startSpin()
+            {
+                // Ensure that spinning can't be clicked again while already running.
+                if (wheelSpinning == false)
+                {
+                    // Based on the power level selected adjust the number of spins for the wheel, the more times is has
+                    // to rotate with the duration of the animation the quicker the wheel spins.
+                    if (wheelPower == 1)
+                    {
+                        theWheel.animation.spins = 3;
+                    }
+                    else if (wheelPower == 2)
+                    {
+                        theWheel.animation.spins = 6;
+                    }
+                    else if (wheelPower == 3)
+                    {
+                        theWheel.animation.spins = 5;
+                    }
+                    
+                    // Disable the spin button so can't click again while wheel is spinning.
+                    document.getElementById('spin_button').src       = "button.png";
+                    document.getElementById('spin_button').className = "";
+                    
+                    // Begin the spin animation by calling startAnimation on the wheel object.
+                    theWheel.startAnimation();
+                    
+                    // Set to true so that power can't be changed and spin button re-enabled during
+                    // the current animation. The user will have to reset before spinning again.
+                    wheelSpinning = true;
+                }
+            }
+            // -------------------------------------------------------
+            // Function for reset button.
+            // -------------------------------------------------------
+            function resetWheel()
+            {
+                theWheel.stopAnimation(false);  // Stop the animation, false as param so does not call callback function.
+                theWheel.rotationAngle = 0;     // Re-set the wheel angle to 0 degrees.
+                theWheel.draw();                // Call draw to render changes to the wheel.
+
+                document.getElementById('pw1').className = "";  // Remove all colours from the power level indicators.
+                document.getElementById('pw2').className = "";
+                document.getElementById('pw3').className = "";
+
+                wheelSpinning = false;          // Reset to false to power buttons and spin can be clicked again.
+            }
+
+            // -------------------------------------------------------
+            // Called when the spin animation has finished by the callback feature of the wheel because I specified callback in the parameters.
+            // -------------------------------------------------------
+            function alertPrize()
+            {
+
+                
+                // Get the segment indicated by the pointer on the wheel background which is at 0 degrees.
+                var winningSegment = theWheel.getIndicatedSegment();
+
+                // Do basic alert of the segment text. You would probably want to do something more interesting with this information.
+                alert("¡Felicidades!, " + winningSegment.text);
+                localStorage.cuponGuardado = "Se ha guardado tu cupon:" + winningSegment.text;
+                
+            }
+
+        </script>
+    </body>
+</html>
