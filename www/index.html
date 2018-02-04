@@ -11,47 +11,11 @@
     <link rel="stylesheet" href="./lib/onsenold/onsen-css-components.css">
     <link rel="stylesheet" type="text/css" href="css/index.css">
     <script src="./js/angular.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-animate.js"></script>
-    <script type="text/javascript" src="ruleta/Winwheel.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
     <script type="text/javascript" src="./lib/onsenold/jquery.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="./lib/onsenold/onsenui.min.js"></script>
     <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAc1FqV8MG7kCvvP0LNi38zcRAfclDK7n0&libraries=geometry"></script> -->
     <script src="https://maps.googleapis.com/maps/api/js?v=3exp&libraries=geometry"></script>
     <script src="./js/ng-map.min.js"></script>
-    <style>
-div.power_controls
-{
-    margin-right:70px;
-}
-
-div.html5_logo
-{
-    margin-left:70px;
-}
-
-/* Styles for the power selection controls */
-table.power
-{
-    background-color: #cccccc;
-    cursor: pointer;
-    border:1px solid #333333;
-}
-
-
-/* Style applied to the spin button once a power has been selected */
-.clickable
-{
-    cursor: pointer;
-}
-
-/* Other misc styles */
-.margin_bottom
-{
-    margin-bottom: 5px;
-}
-    </style>
         <script>
         if (!localStorage.puntosiniciales){
           localStorage.puntosiniciales = 80;
@@ -274,10 +238,6 @@ table.power
         idnew = elemento;
       };
     });
-    //Ruleta
-    app.controller("ruletaCtl", function($scope, position, $http, $rootScope) {
-
-    });
         </script>
     </head>
   <body onload="onLoad()">
@@ -301,14 +261,14 @@ table.power
               <ons-button modifier="outline" onclick="menu.setMainPage('por_nombre.html', {closeMenu: true})"><ons-icon icon="fa-tags"></ons-icon><br /><span class="letraHome">POR NOMBRE</span></ons-button>
                 </div>
             </div>
-            <div class="ruleta_home"><ons-button modifier="outline" onclick="menu.setMainPage('ruleta.html', {closeMenu: true})"><img src="img/ruleta.png" alt=""><br /><span class="letraRuleta">RULETA</span></ons-button></div>
-            <a target="_self" href="ruleta/index.html">Ir A LA RULETA</a>
+            <div class="ruleta_home"><a target="_self" href="ruleta/index.html">Ir A LA RULETA</a></div>
+            
               <a ng-repeat="banner in banner.bannerportada" ng-if="banner.estado == '1'" target="_blank" ng-href="{{banner.url}}" class="bannerImagen" style="background: url('https://viveenunclick.com/assets/images/imgclientes/{{banner.imagen}}') no-repeat;"></a>
           <div class="footer">
             <div class="botones">
               <ons-button onclick="menu.setMainPage('instrucciones.html', {closeMenu: true})"><i class="fa fa-book" aria-hidden="true"></i><br> INSTRUCTIVO</ons-button>
               <ons-button><a href="https://viveenunclick.com/movil/contacto" target="_blank"><i class="fa fa-user" aria-hidden="true"></i><br> CONTACTO</a></ons-button>
-              <ons-button onclick="menu.setMainPage('ruleta.html', {closeMenu: true})"><img src="img/ruleta.png" alt=""><br> <span style="position:relative;top: -3px;">RULETA</span></ons-button>
+              <a target="_self" href="ruleta/index.html">Ir A LA RULETA</a>
               <ons-button onclick="exitFromApp();"><i class="fa fa-power-off" aria-hidden="true"></i><br> SALIR</ons-button>
             </div>
             <div class="copy"><p>Vive en un Click &copy; 2017 | Versión: {{version}}</p></div>
@@ -337,116 +297,6 @@ table.power
                 <ons-list>
                   <ons-list-item ng-click="tomarCategoria(post.id); menu.setMainPage('porCategoria.html', {closeMenu: true})" class="categoriaImagen" ng-repeat="post in posts.clientes_categorias" style="background: url('https://viveenunclick.com/assets/images/imgclientes/imagenescategorias/{{post.Imagen}}') no-repeat;"><span>{{post.nombre}}</span></ons-list-item>
                 </ons-list>
-            </ons-page>
-        </ons-template>
-        <ons-template id="ruleta.html">
-            <ons-page class="ruleta">
-                <ons-toolbar>
-                    <div class="left">
-                      <ons-toolbar-button onclick="menu.setMainPage('page1.html', {closeMenu: true})"><i class="fa fa-chevron-left" aria-hidden="true"></i></ons-toolbar-button>
-                    </div>
-                    <div class="center">RULETA</div>
-                    <div class="right">
-                      <ons-toolbar-button onclick="menu.setMainPage('perfil.html', {closeMenu: true})"><i class="fa fa-user-circle-o" aria-hidden="true"></i></ons-toolbar-button>
-                    </div>
-                </ons-toolbar>
-                <ons-tabbar position="top">
-                    <ons-tab ng-click="menu.setMainPage('page1.html', {closeMenu: true}, {animation:'slide'})" label="Inicio" icon="fa-home"></ons-tab>
-                    <ons-tab ng-click="menu.setMainPage('lista.html', {closeMenu: true}, {animation:'slide'})" label="Mís cupones" icon="fa-gift"></ons-tab>
-                    <ons-tab ng-click="menu.setMainPage('por_nombre.html', {closeMenu: true}, {animation:'lift'})" label="Mí perfil" icon="fa-id-card-o"></ons-tab>
-                </ons-tabbar>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-                <h3>Tira la ruleta para ganar una de nuestras excelentes promociones</h3>
-            <p style="color: yellow;">Gana desde descuentos, cortesias, degustaciones, dinero virtual, etc.</p>
-            <pre id="output"></pre>
-            <br />
-            <table cellpadding="0" cellspacing="0" border="0">
-            <tr>
-                <td width="315" height="315" class="the_wheel" align="center" valign="center">
-                    <img id="spin_button" src="ruleta/button.png" alt="Spin" onClick="startSpin();" />
-                    <canvas id="canvas" width="315" height="315">
-                        <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p>
-                    </canvas>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><br>
-                    <br>
-                    <div id="the-24h-countdown"><p></p></div></td>
-            </tr>
-        </table>
-        <script>
-          // Create new wheel object specifying the parameters at creation time.
-            var theWheel = new Winwheel({   // Set outer radius so wheel fits inside the background.
-                'drawMode'          : 'image',
-                'animation' :                   // Specify the animation to use.
-                {
-                    'type'     : 'spinToStop',
-                    'duration' : 5,     // Duration in seconds.
-                    'spins'    : 12,     // Number of complete spins.
-                    'callbackFinished' : 'alertPrize()'
-                }
-            });
-
-            // Create new image object in memory.
-            var loadedImg = new Image();
-
-            // Create callback to execute once the image has finished loading.
-            loadedImg.onload = function()
-            {
-                theWheel.wheelImage = loadedImg;    // Make wheelImage equal the loaded image object.
-                theWheel.draw();                    // Also call draw function to render the wheel.
-            };
-
-            // Set the image source, once complete this will trigger the onLoad callback (above).
-            loadedImg.src = "ruleta/ruleta.png";
-
-            // Vars used by the code in this page to do power controls.
-            var wheelPower    = 0;
-            var wheelSpinning = false;
-            // -------------------------------------------------------
-            // Click handler for spin button.
-            // -------------------------------------------------------
-            function startSpin()
-            {
-                // Ensure that spinning can't be clicked again while already running.
-                if (wheelSpinning == false)
-                {
-                    // Based on the power level selected adjust the number of spins for the wheel, the more times is has
-                    // to rotate with the duration of the animation the quicker the wheel spins.
-                    if (wheelPower == 1)
-                    {
-                        theWheel.animation.spins = 3;
-                    }
-                    else{
-                        theWheel.animation.spins = 5;
-                      }
-                    
-                    // Disable the spin button so can't click again while wheel is spinning.
-                    document.getElementById('spin_button').src       = "ruleta/button.png";
-                    document.getElementById('spin_button').className = "";
-                    
-                    // Begin the spin animation by calling startAnimation on the wheel object.
-                    theWheel.startAnimation();
-                    
-                    // Set to true so that power can't be changed and spin button re-enabled during
-                    // the current animation. The user will have to reset before spinning again.
-                    wheelSpinning = true;
-                }
-            }
-            function alertPrize()
-            {   
-                // Get the segment indicated by the pointer on the wheel background which is at 0 degrees.
-                var winningSegment = theWheel.getIndicatedSegment();
-
-                // Do basic alert of the segment text. You would probably want to do something more interesting with this information.
-                alert("¡Felicidades!, " + winningSegment.text);
-                localStorage.cuponGuardado = "Se ha guardado tu cupon:" + winningSegment.text;
-                
-            }
-        </script>
             </ons-page>
         </ons-template>
         <ons-template id="lista.html">
